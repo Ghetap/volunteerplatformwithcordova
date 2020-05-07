@@ -1,0 +1,7 @@
+{
+  "name": "volunteerplatformcordova",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

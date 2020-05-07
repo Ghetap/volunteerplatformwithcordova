@@ -1,0 +1,17 @@
+<ion-content>
+    <ion-card>
+        <ion-card-header>
+            <ion-avatar slot="start">
+                <img [src]="message.authorURL" alt="avatar" style="width: 100%;">
+            </ion-avatar>
+            <ion-card-subtitle> 
+                {{ message.timestamp }}
+            </ion-card-subtitle>
+            <ion-icon *ngIf="message.seen" name="checkbox-outline"></ion-icon>
+            <ion-icon *ngIf="!message.seen" name="checkmark-outline"></ion-icon>
+        </ion-card-header>     
+        <ion-card-content>
+            <ion-text>{{ message.text }}</ion-text>
+        </ion-card-content>
+    </ion-card>
+</ion-content>
