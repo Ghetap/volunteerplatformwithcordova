@@ -4,10 +4,6 @@ export class User {
     public email: string,
     private _token: string,
     private tokenExpirationDate: Date,
-    public firstname?:string,
-    public lastname?:string,
-    public imageUrl?:string,
-    public description?:string
   ) {}
 
   get token() {

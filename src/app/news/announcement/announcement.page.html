@@ -14,8 +14,8 @@
 
 <ion-content class="ion-padding">
   <ion-segment value="all" (ionChange)="onFilterUpdate($event)">
-    <ion-segment-button value="all">All </ion-segment-button>
-    <ion-segment-button value="bookable">My Active Announcements</ion-segment-button>
+    <ion-segment-button value="all">All News</ion-segment-button>
+    <ion-segment-button value="bookable">My Active News</ion-segment-button>
   </ion-segment>
   <ion-grid *ngIf="isLoading">
     <ion-row>
