@@ -17,6 +17,14 @@ const routes: Routes = [
         ]
       },
       {
+        path:'myannouncement',children:[
+          {
+            path: '',
+            loadChildren: () => import('./myannouncement/myannouncement.module').then( m => m.MyannouncementPageModule)
+          }
+        ]
+      },
+      {
         path:'announcement',children:[
           {
             path: '',
@@ -25,6 +33,10 @@ const routes: Routes = [
          {
            path:'new',
            loadChildren:() => import('./announcement/new-announcement/new-announcement.module').then(m =>m.NewAnnouncementPageModule)
+         },
+         {
+          path:'edit/:announcementId',
+          loadChildren: () => import('./announcement/edit-announcement/edit-announcement.module').then( m => m.EditAnnouncementPageModule)  
          },
          {
            path:':announcementId',

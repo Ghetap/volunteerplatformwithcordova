@@ -1,23 +1,22 @@
 <ion-item>
 <ion-thumbnail slot="start">
-  <ion-img [src]="annoucement.userPictureUrl"></ion-img>
+  <ion-img [src]="announcement.userPictureUrl"></ion-img>
 </ion-thumbnail>
 <ion-label>
-  <h1>{{ annoucement.title }}</h1>
+  <h1>{{ announcement.title }}</h1>
     <ion-icon 
     name="calendar" 
-    class="space-left"
-    color="secondary"></ion-icon>
-      <ion-text color="primary" >
-        {{ annoucement.availableFrom | date}}
+    class="ion-space-left"
+    color="primary"></ion-icon>
+      <ion-text  >
+        {{ announcement.startDate | date : 'dd/MM/yyyy'}}
       </ion-text>
-      <span class="space-left" > to </span>
       <ion-icon 
       name="calendar" 
-      class="space-left"
-      color="secondary"></ion-icon>
-      <ion-text color="primary" >
-        {{ announcement.availableTo | date}}
+      class="ion-space-left"
+      color="primary"></ion-icon>
+      <ion-text>
+        {{ announcement.endDate | date : 'dd/MM/yyyy'}}
       </ion-text>
 </ion-label>
 </ion-item>

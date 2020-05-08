@@ -1,34 +1,28 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { BehaviorSubject, of} from 'rxjs';
-import { Message } from './announcement/message.model';
 import { Announcement } from './announcement/announcement.model';
 import { take, switchMap, map, tap } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
-import { Notification } from './notifications/notification.model';
-
+import { AngularFirestore } from 'angularfire2/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NewsService {
 
-  private _messages = new BehaviorSubject<Message[]>([]);
-  private _notifications = new BehaviorSubject<Notification[]>([]);
   private _annoucements = new BehaviorSubject<Announcement[]>([]);  
-  private 
+  private _myannouncements = new BehaviorSubject<Announcement[]>([]);
   constructor(
     private authService:AuthService,
     private firestore:AngularFirestore) { 
     }
 
-  get messages(){
-    return this._messages.asObservable();
-  }
-
   get announcements(){
     return this._annoucements.asObservable();
+  }
+
+  get myannouncements(){
+    return this._myannouncements.asObservable();
   }
 
   addAnouncement(
@@ -110,8 +104,8 @@ export class NewsService {
             announcemetDoc.title,
             announcemetDoc.description,
             announcemetDoc.price,
-            announcemetDoc.dateFrom,
-            announcemetDoc.dateTo,
+            announcemetDoc.dateFrom.toDate(),
+            announcemetDoc.dateTo.toDate(),
             announcemetDoc.userId,
             announcemetDoc.authorUrl,
             announcemetDoc.phone)
@@ -134,4 +128,87 @@ export class NewsService {
    }));
   }
 
+  deleteAnouncementById(announcementId:string){
+    return this.authService.userId.pipe(
+      take(1),
+      map(userId=>{
+        if(!userId){
+          throw new Error('User not found!')
+        }
+      }),
+      switchMap(()=>{
+        return this.firestore.collection('announcements')
+        .doc(announcementId)
+        .delete()
+      }),
+      switchMap(()=>{return this._annoucements}),
+      take(1),
+      tap(list=>{
+        console.log(list);
+        this._annoucements.next(list.filter(b=>{b.id !== announcementId}))
+      })
+    )
+  }
+  fetchMyAnnouncements(userId:string){
+    return this.firestore.collection('announcements',ref=>ref.where('userId','==',userId)).get()
+    .pipe(map(resData=>{
+      const announcements = [];
+      resData.docs.map(doc=>{
+        const announcemetDoc = doc.data();
+        announcements.push(
+          new Announcement(
+            announcemetDoc.id,
+            announcemetDoc.title,
+            announcemetDoc.description,
+            announcemetDoc.price,
+            announcemetDoc.dateFrom.toDate(),
+            announcemetDoc.dateTo.toDate(),
+            announcemetDoc.userId,
+            announcemetDoc.authorUrl,
+            announcemetDoc.phone)
+        )
+      })
+      return announcements;
+    }),
+    tap(list=>{
+      this._myannouncements.next(list);
+    })
+    );
+  }
+  updateAnnouncement(id:string, title:string, description:string, money:number,phone:string){
+        let upadetNews = [];
+        return this.myannouncements.pipe(
+          take(1),
+          switchMap( announcements=>{
+            const toUpdateAnnouncementIndex = announcements.findIndex(an=>an.id===id);
+            upadetNews = [...announcements];
+            const oldAnnouncement = upadetNews[toUpdateAnnouncementIndex];
+            upadetNews[toUpdateAnnouncementIndex] = new Announcement(
+              oldAnnouncement.id,
+              title,
+              description,
+              money,
+              oldAnnouncement.startDate,
+              oldAnnouncement.endDate,
+              oldAnnouncement.userId,
+              oldAnnouncement.userPictureUrl,
+              phone);
+              console.log(toUpdateAnnouncementIndex);
+              console.log(upadetNews);
+              return of(upadetNews);
+        }),
+        switchMap(()=>{
+          return this.firestore.doc(`announcements/${id}`).update({
+            title:title,
+            description:description,
+            price:money,
+            phone:phone
+          })
+        }),
+        take(1),
+        tap(()=> {
+          this._annoucements.next(upadetNews);
+        })
+    )
+  }
 }

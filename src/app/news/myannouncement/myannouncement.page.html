@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="news/tabs/announcement"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Your Announcements</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col class="ion-text-center" size-md="6" offset-md="3" *ngIf="isLoading">
+      <ion-spinner></ion-spinner>
+    </ion-col>
+      <ion-col size="12" size-sm="8" offset-sm="2">
+        <div *ngIf="isLoading" class="ion-text-center">
+          <ion-spinner color="primary" ></ion-spinner>
+        </div>
+        <div *ngIf="!isLoading && myNews.length <= 0" class="ion-text-center">
+          <p>No announcements found! Please create one first!</p>
+          <ion-button color="primary" routerLink="/news/tabs/announcement/new">Create Announcement</ion-button>
+        </div>
+        <ion-list>
+          <ion-item-sliding
+           *ngFor="let announcement of myNews"
+           #slidingAnnouncement>
+            <app-announcement-item [announcement]="announcement"></app-announcement-item>
+            <ion-item-options>
+              <ion-item-option color="danger" (click)="onDeleteAnnouncement(announcement.id,slidingAnnouncement)">
+                <ion-icon name="trash" slot="top"></ion-icon>
+                Delete
+              </ion-item-option>
+              <ion-item-option side="start" color="tertiary" (click)="onUpdateAnnouncement(announcement.id,slidingAnnouncement)">
+                Edit
+                <ion-icon name="create" slot="top"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

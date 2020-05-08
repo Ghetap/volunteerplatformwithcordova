@@ -1,0 +1,83 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button
+        defaultHref="/news/tabs/myannouncement"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-title>Edit Announcement</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button 
+      (click)="onEditAnnouncement()"
+      [disabled]="!form?.valid">
+        <ion-icon 
+        name="checkmark" 
+        slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content  class="ion-padding"> 
+  <div *ngIf="isLoading">
+    <ion-spinner color="primary" class="ion-text-center"></ion-spinner>
+  </div>
+  <form [formGroup]="form" class="ion-text-center ion-padding" *ngIf="!isLoading">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Title</ion-label>
+            <ion-input
+             type="text"
+             autocomplete
+             autocorect
+             formControlName="title"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+        <ion-row>
+          <ion-col size-sm="6" offset-sm="3">
+            <ion-item>
+              <ion-label position="floating">Description</ion-label>
+              <ion-textarea
+               rows="10"
+               formControlName="description"
+               ></ion-textarea>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+       
+        <ion-row>
+          <ion-col size-sm="6" offset-sm="3">
+            <ion-item>
+              <ion-label position="floating">Payment</ion-label>
+              <ion-input
+               type="number"
+               formControlName="price"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size-sm="6" offset-sm="3">
+            <ion-item>
+              <ion-label position="floating">Phone Number</ion-label>
+              <ion-input
+               type="text"
+               formControlName="phone"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+         <ion-row *ngIf="!form.get('phone').valid &&
+        form.get('phone').touched">
+          <ion-col size-sm="6" offset-sm="3">
+              <p>Phone number must be exactly 10 characters long</p>
+          </ion-col>
+        </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>
+
