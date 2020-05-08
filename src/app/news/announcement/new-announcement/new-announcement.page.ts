@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, ModalController, ActionSheetController } from '@ionic/angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NewsService } from '../../news.service';
 
@@ -11,7 +11,10 @@ import { NewsService } from '../../news.service';
 })
 export class NewAnnouncementPage implements OnInit {
 
+  selectedMode: 'select' | 'default';
   form:FormGroup;
+  startDate: string;
+  endDate:string;
   constructor(
     private router:Router,
     private loadingCtrl:LoadingController,
@@ -25,19 +28,32 @@ export class NewAnnouncementPage implements OnInit {
       }),
       description: new FormControl(null,{
         updateOn:'change',
-        validators:[Validators.required,Validators.maxLength(180)]
+        validators:[Validators.required]
       }),
       price:new FormControl(null,{
         updateOn:'change',
         validators:[Validators.required,Validators.min(1)]
+      }),
+      phone: new FormControl(null,{
+        updateOn:'change',
+        validators:[Validators.required,Validators.maxLength(10), Validators.minLength(10)]
+      }),
+      startDate: new FormControl(null,{
+        updateOn:'change',
+        validators:[Validators.required]
+      }),
+      endDate: new FormControl(null,{
+        updateOn:'change',
+        validators:[Validators.required]
       })
     });
   }
 
   onCreateAnnouncement(){
-    if(!this.form.valid){
+    if(!this.form.valid || !this.datesValid){
       return ;
     }
+
     this.loadingCtrl.create({
       message:'Creating announcement...'
     }).then(loadingEl=>{
@@ -46,11 +62,19 @@ export class NewAnnouncementPage implements OnInit {
         this.form.value.title,
         this.form.value.description,
         +this.form.value.price,
+        this.form.value.phone,
+        new Date(this.form.value.startDate),
+        new Date(this.form.value.endDate),
       ).subscribe(()=>{
         loadingEl.dismiss();
         this.form.reset();
         this.router.navigate(['/news/tabs/announcement']);
       })
     })
+  }
+  datesValid(){
+    const startDate = new Date(this.form.value.startDate);
+    const endDate = new Date(this.form.value.endDate);
+    return endDate > startDate;
   }
 }

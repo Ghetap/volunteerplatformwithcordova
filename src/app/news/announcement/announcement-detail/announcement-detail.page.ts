@@ -43,7 +43,8 @@ export class AnnouncementDetailPage implements OnInit,OnDestroy {
             announcement.dateFrom.toDate(),
             announcement.dateTo.toDate(),
             announcement.userId,
-            announcement.authorUrl);
+            announcement.authorUrl,
+            announcement.phone);
             this.isLoading = false;
             console.log(this.announcement);
           },error=>{

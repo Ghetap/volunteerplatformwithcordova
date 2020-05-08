@@ -6,10 +6,11 @@ export class Announcement{
         public title:string,
         public description:string,
         public price:number,
-        public availableFrom:Date,
-        public availableTo:Date,
+        public startDate:Date,
+        public endDate:Date,
         public userId:string,
         public userPictureUrl:string,
+        public phone:string,
         public message?:Message[]
     ){};
 }

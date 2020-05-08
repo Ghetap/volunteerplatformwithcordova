@@ -20,25 +20,37 @@
           <ion-card-subtitle>{{ announcement.description }}</ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
-        <ion-text>{{ announcement.price + ' lei' }} </ion-text>
+          <ion-label>
+            <ion-icon name="cash-outline" color="primary" class="ion-space-left"></ion-icon>
+            <ion-text>
+              {{ announcement.price + ' lei' }}
+             </ion-text>
+          </ion-label>
         </ion-card-content>
         <ion-label>
-          <span class="space-left" > From </span>
+          <span class="ion-space-left" > From </span>
           <ion-icon 
               name="calendar" 
-              class="space-left"
+              class="ion-space-left"
               color="primary"></ion-icon>
-            <ion-text color="primary" >
-              {{ announcement.availableFrom | date}}
+            <ion-text>
+              {{ announcement.startDate | date}}
             </ion-text>
-            <span class="space-left" > to </span>
+            <span class="ion-space-left" > to </span>
             <ion-icon 
               name="calendar" 
-              class="space-left"
+              class="ion-space-left"
               color="primary"></ion-icon>
-            <ion-text color="primary" >
-              {{ announcement.availableTo | date}}
+            <ion-text>
+              {{ announcement.endDate | date}}
             </ion-text>
+        </ion-label>
+        <hr>
+        <ion-label>
+          <ion-icon name="call-outline" color="primary" class="ion-space-left" ></ion-icon>
+          <ion-text>
+            {{ announcement.phone }}
+          </ion-text>
         </ion-label>
       </ion-card>
      </ion-col>

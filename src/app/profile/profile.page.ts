@@ -20,9 +20,6 @@ export class ProfilePage implements OnInit {
     private alertCtrl:AlertController,
     private router:Router) {
   }
-  ionWillEnter(){
-
-  }
   ngOnInit() {
     let fetchedUserId:string;
     this.authService.userId.pipe(

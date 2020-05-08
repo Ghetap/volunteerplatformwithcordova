@@ -35,6 +35,9 @@ export class NewsService {
     title:string,
     description:string,
     money:number,
+    phone:string,
+    startDate:Date,
+    endDate:Date
     ){
       var userIdCopy;
       var newAnnouncement;
@@ -54,9 +57,6 @@ export class NewsService {
         take(1),
         switchMap(userDocData=>{
           var data = userDocData.data();
-          console.log(data);
-          let dateFrom = new Date();
-          let dateTo = new Date(dateFrom.getDate() +  12096e5);
           let pictureUrl=''
           if(data.imageUrl){
              pictureUrl=data.imageUrl;
@@ -67,10 +67,11 @@ export class NewsService {
             title,
             description,
             money,
-            dateFrom,
-            dateTo,
+            startDate,
+            endDate,
             userIdCopy,
             pictureUrl,
+            phone
           )
           return of(newAnnouncement);
         }),
@@ -82,10 +83,11 @@ export class NewsService {
               title:data.title,
               description:data.description,
               price:data.price,
-              dateFrom:data.availableFrom,
-              dateTo:data.availableTo,
+              dateFrom:data.startDate,
+              dateTo:data.endDate,
               userId:data.userId,
-              authorUrl:data.userPictureUrl
+              authorUrl:data.userPictureUrl,
+              phone:data.phone
             })
         }),
         switchMap(()=>{return this._annoucements}),
@@ -111,7 +113,8 @@ export class NewsService {
             announcemetDoc.dateFrom,
             announcemetDoc.dateTo,
             announcemetDoc.userId,
-            announcemetDoc.authorUrl)
+            announcemetDoc.authorUrl,
+            announcemetDoc.phone)
         )
       })
       return announcements;
