@@ -1,7 +1,7 @@
 <ion-app>
   <ion-menu side="start">
-    <ion-header>
-      <ion-toolbar>
+    <ion-header >
+      <ion-toolbar color="medium">
         <ion-title>
           Menu
         </ion-title>
@@ -12,20 +12,20 @@
       <ion-list>
         <ion-menu-toggle>
           <ion-item lines="none" routerLink="">
-            <ion-icon name="business" slot="start"></ion-icon>
-            <ion-label>Your Reviews</ion-label>
+            <ion-icon name="business" slot="start" color="primary"></ion-icon>
+            <ion-label color="medium">Your Reviews</ion-label>
           </ion-item>
         </ion-menu-toggle>
         <ion-menu-toggle>
           <ion-item lines="none" routerLink="/profile">
-            <ion-icon name="person" slot="start"></ion-icon>
-              <ion-label> Profile</ion-label>
+            <ion-icon name="person" slot="start" color="primary"></ion-icon>
+              <ion-label color="medium"> Profile</ion-label>
           </ion-item>
         </ion-menu-toggle>
         <ion-menu-toggle>
           <ion-item lines="none" (click)="onLogout()" button>
-            <ion-icon name="exit" slot="start"></ion-icon>
-            <ion-label>Logout</ion-label>
+            <ion-icon name="exit" slot="start" color="primary"></ion-icon>
+            <ion-label color="medium">Logout</ion-label>
           </ion-item>
         </ion-menu-toggle>
       </ion-list>
