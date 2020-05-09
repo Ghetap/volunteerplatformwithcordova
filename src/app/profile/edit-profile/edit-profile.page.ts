@@ -1,4 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { UserProfile } from '../userProfile.model';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProfileService } from '../profile.service';
+import { NavController, LoadingController, AlertController } from '@ionic/angular';
+import { AngularFireStorage } from 'angularfire2/storage';
 
 @Component({
   selector: 'app-edit-profile',
@@ -7,9 +14,100 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EditProfilePage implements OnInit {
 
-  constructor() { }
+  userToEdit:UserProfile;
+  form:FormGroup;
+  private editProfileSub:Subscription;
+  isLoading = false;
+  userId:string;
+  constructor(
+    private profileService:ProfileService,
+    private router:Router,
+    private loadingCtrl:LoadingController,
+    private alertCtrl:AlertController,
+    private astorage:AngularFireStorage
+  ) {}
 
   ngOnInit() {
+      this.isLoading = true;
+      this.editProfileSub = this.profileService.getUserDetails()
+      .subscribe((userDetails)=>{
+        this.userToEdit = new UserProfile(
+          userDetails.id,
+          userDetails.email,
+          userDetails.firstname,
+          userDetails.lastname,
+          userDetails.imageUrl,
+          userDetails.description);
+        this.form = new FormGroup({
+          profilePhoto:new FormControl('',{
+            updateOn:'change',
+            validators:[Validators.required]
+          }),
+          firstname: new FormControl(this.userToEdit.firstname,{
+            updateOn:'change',
+            validators:[Validators.required]
+          }),
+          lastname:new FormControl(this.userToEdit.lastname,{
+            updateOn:'change',
+            validators:[Validators.required]
+          }),
+          description: new FormControl(this.userToEdit.description ? this.userToEdit.description: '',{
+            updateOn:'change',
+            //validators:[Validators.required]
+          }),
+        });
+        this.isLoading = false;
+      },error=>{
+        this.alertCtrl.create({
+          header:'An error occured!',
+          message:' User could not be fetched. Please try again later!',
+          buttons:[{text:'Okay',handler:()=>{
+            this.router.navigate(['/profile']);
+          }}]
+        }).then(alertEl=>{
+          alertEl.present();
+        })
+      }); 
   }
-
+  onFileChange(event) {
+    var file = event.target.files[0];
+    // console.log(file);
+    //   this.profileService.uploadImage(file).subscribe();
+    //   this.profileService.url.subscribe(url=>{url=url})
+    // console.log(url);
+    this.uploadPicture(file);
+      
+  }
+  async uploadPicture(imageUri){
+    const storageRef = this.astorage.storage.ref(`usersProfile/${imageUri.name}`);
+    await storageRef.put(imageUri);
+    this.form.patchValue({
+      profilePhoto:await storageRef.getDownloadURL()
+    })
+  }
+  ngOnDestroy(){
+    if(this.editProfileSub)
+      this.editProfileSub.unsubscribe();
+  }
+  onEditProfile(){
+    if(!this.form.valid){
+      return ;
+    }
+    this.loadingCtrl.create({
+      message:'Editing profile...'
+    }).then(loadingEl=>{
+      loadingEl.present();
+     // console.log(this.form.value.profilePhoto);
+      this.profileService.updateUserProfile(
+        this.form.value.firstname,
+        this.form.value.lastname,
+        this.form.value.description,
+        this.form.value.profilePhoto,
+      ).subscribe(()=>{
+        loadingEl.dismiss();
+        this.form.reset();
+        this.router.navigate(['/profile']);
+      });
+    })
+  }
 }

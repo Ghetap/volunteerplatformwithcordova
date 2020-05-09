@@ -31,7 +31,8 @@ export class NewsService {
     money:number,
     phone:string,
     startDate:Date,
-    endDate:Date
+    endDate:Date,
+    location:string
     ){
       var userIdCopy;
       var newAnnouncement;
@@ -65,7 +66,8 @@ export class NewsService {
             endDate,
             userIdCopy,
             pictureUrl,
-            phone
+            phone,
+            location
           )
           return of(newAnnouncement);
         }),
@@ -81,7 +83,8 @@ export class NewsService {
               dateTo:data.endDate,
               userId:data.userId,
               authorUrl:data.userPictureUrl,
-              phone:data.phone
+              phone:data.phone,
+              location:data.location
             })
         }),
         switchMap(()=>{return this._annoucements}),
@@ -108,7 +111,8 @@ export class NewsService {
             announcemetDoc.dateTo.toDate(),
             announcemetDoc.userId,
             announcemetDoc.authorUrl,
-            announcemetDoc.phone)
+            announcemetDoc.phone,
+            announcemetDoc.location)
         )
       })
       return announcements;
@@ -165,7 +169,8 @@ export class NewsService {
             announcemetDoc.dateTo.toDate(),
             announcemetDoc.userId,
             announcemetDoc.authorUrl,
-            announcemetDoc.phone)
+            announcemetDoc.phone,
+            announcemetDoc.location)
         )
       })
       return announcements;
@@ -175,7 +180,7 @@ export class NewsService {
     })
     );
   }
-  updateAnnouncement(id:string, title:string, description:string, money:number,phone:string){
+  updateAnnouncement(id:string, title:string, description:string, money:number,phone:string,location:string){
         let upadetNews = [];
         return this.myannouncements.pipe(
           take(1),
@@ -192,7 +197,8 @@ export class NewsService {
               oldAnnouncement.endDate,
               oldAnnouncement.userId,
               oldAnnouncement.userPictureUrl,
-              phone);
+              phone,
+              location);
               console.log(toUpdateAnnouncementIndex);
               console.log(upadetNews);
               return of(upadetNews);
@@ -202,7 +208,8 @@ export class NewsService {
             title:title,
             description:description,
             price:money,
-            phone:phone
+            phone:phone,
+            location:location
           })
         }),
         take(1),

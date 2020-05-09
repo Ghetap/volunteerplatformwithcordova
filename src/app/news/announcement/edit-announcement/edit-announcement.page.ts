@@ -47,7 +47,8 @@ export class EditAnnouncementPage implements OnInit {
           announcement.dateTo.toDate(),
           announcement.userId,
           announcement.authorUrl,
-          announcement.phone);
+          announcement.phone,
+          announcement.location);
 
         this.form = new FormGroup({
           title:new FormControl(this.announcementtoBeEdited.title,{
@@ -66,6 +67,10 @@ export class EditAnnouncementPage implements OnInit {
             updateOn:'change',
             validators:[Validators.required,Validators.maxLength(10), Validators.minLength(10)]
           }),
+          location:new FormControl(this.announcementtoBeEdited.location,{
+            updateOn:'change',
+            validators:[Validators.required,Validators.min(1)]
+          })
         });
         this.isLoading = false;
       },error=>{
@@ -98,7 +103,8 @@ export class EditAnnouncementPage implements OnInit {
         this.form.value.title,
         this.form.value.description,
         this.form.value.price,
-        this.form.value.phone
+        this.form.value.phone,
+        this.form.value.location
       ).subscribe(()=>{
         loadingEl.dismiss();
         this.form.reset();

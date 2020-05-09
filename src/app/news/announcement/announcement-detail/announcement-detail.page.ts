@@ -44,7 +44,8 @@ export class AnnouncementDetailPage implements OnInit,OnDestroy {
             announcement.dateTo.toDate(),
             announcement.userId,
             announcement.authorUrl,
-            announcement.phone);
+            announcement.phone,
+            announcement.location);
             this.isLoading = false;
             console.log(this.announcement);
           },error=>{

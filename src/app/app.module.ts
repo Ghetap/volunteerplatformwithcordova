@@ -19,7 +19,7 @@ import { ToastService } from './shared/toast.service';
 import { FcmService } from './shared/fcm.service';
 import { LocalNotifications} from '@ionic-native/local-notifications/ngx';
 import { IonicStorageModule } from '@ionic/storage';
-
+import {AngularFireStorageModule} from 'angularfire2/storage'
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -31,6 +31,7 @@ import { IonicStorageModule } from '@ionic/storage';
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     AngularFirestoreModule,
+    AngularFireStorageModule,
     ],
   providers: [
     StatusBar,

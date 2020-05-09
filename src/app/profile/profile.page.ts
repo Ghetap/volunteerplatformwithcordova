@@ -15,23 +15,18 @@ import { Router } from '@angular/router';
 export class ProfilePage implements OnInit {
 
   userProfile:UserProfile;
+  imageUrl:string;
   constructor(private profileService:ProfileService,
-    private authService:AuthService,
     private alertCtrl:AlertController,
     private router:Router) {
   }
-  ngOnInit() {
-    let fetchedUserId:string;
-    this.authService.userId.pipe(
-      take(1),
-      switchMap(userId=>{
-        if(!userId){
-          throw new Error('No user found !')
-        }
-        fetchedUserId = userId;
-        return this.profileService.getUserDetails(userId);
-      })
-    ).subscribe(user=>{
+  ngOnInit() {}
+
+  ionViewWillEnter(){
+    this.profileService.getUserDetails().subscribe(user=>{
+      console.log(user);
+      if(!user.imageUrl)
+        user.imageUrl =  "assets/icon/pctplaceholder.png";
       this.userProfile = user;
       console.log(this.userProfile);
     },error=>{
@@ -44,8 +39,8 @@ export class ProfilePage implements OnInit {
             this.router.navigate(['/news/tabs/announcement']);
           }
         }]
-      })
-      .then(alerEl=>alerEl.present())
-  })
-}
+    })
+    .then(alerEl=>alerEl.present())})
+  }
+
 }

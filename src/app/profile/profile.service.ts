@@ -5,6 +5,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { User } from '../auth/user.model';
 import { UserProfile } from './userProfile.model';
 import { of, BehaviorSubject } from 'rxjs';
+import { AngularFireStorage } from 'angularfire2/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -12,31 +13,45 @@ import { of, BehaviorSubject } from 'rxjs';
 export class ProfileService {
 
   private _userProfile = new BehaviorSubject<UserProfile>(null);
-
-  constructor(private authService:AuthService,private firestore:AngularFirestore) { }
+  private _url = new BehaviorSubject<string>(null);
+  email:string;
+  userId:string;
+  constructor(private authService:AuthService,private firestore:AngularFirestore,
+    private astorage:AngularFireStorage) { }
 
   get userProfile(){
     return this._userProfile.asObservable();
   }
-  getUserDetails(userId){
-    let email;
+  get url(){
+    return this._url.asObservable();
+  }
+  getUserDetails(){
+    let firstname;
+    let lastname;
+    let imageUrl;
+    let description;
     return this.authService.userId.pipe(
       switchMap((userId)=>{
+        this.userId = userId;
         var docRef = this.firestore.collection('users').doc(userId);
         return docRef.get()
       }),
       take(1),
       map(userdoc=>{
         var userData = userdoc.data();
-        console.log(userData);
-        if(userData.email)
-          email = userData.email;
-        return new UserProfile(userId,email);
-      })
+          this.email = userData.email ? userData.email: '';
+          firstname = userData.firstname ? userData.firstname: '';
+          lastname = userData.lastname ? userData.lastname:'';
+          imageUrl = userData.imageUrl ? userData.imageUrl:'';
+          description = userData.description ? userData.description:'';
+        return new UserProfile(this.userId,this.email,firstname,lastname,imageUrl,description);
+      }),
+      tap((user)=>this._userProfile.next(user))
     )
   }
-  updateUserProfile(firstname?:string , lastname?:string, descripion?:string, url?:string){
+  updateUserProfile(firstname?:string , lastname?:string, description?:string, url?:string){
     var userIdCopy;
+    var user;
     return this.authService.userId.pipe(
       take(1),
       map(userId=>{
@@ -45,24 +60,30 @@ export class ProfileService {
         userIdCopy = userId;
         return userId;
       }),
-      switchMap((userId)=>{
-        var docRef = this.firestore.collection('users').doc(userId);
-        return docRef.get();
+      // switchMap((userId)=>{
+      //   var docRef = this.firestore.collection('users').doc(userId);
+      //   return docRef.get();
+      // }),
+      // take(1),
+      // switchMap(userdoc=>{
+      //   var data = userdoc.data();
+      //   return of(data);
+      // }),
+      switchMap(()=>{
+        user = new UserProfile(this.userId,this.email,firstname?firstname:'',
+        lastname?lastname:'',url?url:'',description?description:'');
+        return of(user)
       }),
-      take(1),
-      switchMap(userdoc=>{
-        var data = userdoc.data();
-        return of(data);
-      }),
-      take(1),
-      map((userData)=>{
-        this.firestore.collection('users').doc(userIdCopy).update({
-          firstname: firstname ? firstname : userData.firstname ? userData.firstname : '',
-          lastname : lastname ? lastname : userData.lastname ? userData.lastname : '',
-          descripion: descripion ? descripion : userData.description ? userData.descripion : '',
-          imageUrl : url ? url: userData.imageUrl ? userData.imageUrl : '',
+      switchMap((user)=>{
+        return this.firestore.collection('users').doc(userIdCopy).update({
+          firstname: user.firstname,
+          lastname: user.lastname,
+          description: user.description,
+          imageUrl: user.imageUrl,
         });
-      })
+      }),
+      tap(()=>{return this._userProfile.next(user)})
     )
   }
+
 }

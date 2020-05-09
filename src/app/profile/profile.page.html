@@ -1,32 +1,46 @@
 <ion-header>
   <ion-toolbar color="medium">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="news/tabs/announcement"></ion-back-button>
+      <ion-back-button color="primary" defaultHref="news/tabs/announcement"></ion-back-button>
     </ion-buttons>
     <ion-title>Profile Page</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button routerLink="/profile/edit-profile">
+        <ion-icon name="create-sharp" slot="icon-only" color="primary"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-grid >
-   
+  <ion-grid>
     <ion-row>
       <ion-col size-sm="6" offset-sm="3">
-        <ion-card class="ion-text-center">
+        <ion-card class="ion-text-center" color="primary">
+          <ion-card color="medium" class="ion-text-center">
+            <hr>
           <ion-avatar class="avatar">
-            <ion-img src="assets/icon/pctplaceholder.png"></ion-img>
-            <ion-img *ngIf="userProfile?.imageUrl" [src]="userProfile?.imageUrl"></ion-img>
+            <ion-img [src]="userProfile?.imageUrl"></ion-img>
           </ion-avatar>
           <ion-card-header>
-            <ion-card-title *ngIf="userProfile?.firstname && userProfile?.lastname">{{ userProfile?.firstname + " " + userProfile?.lastname}}</ion-card-title>
-            <ion-card-subtitle >{{ userProfile?.email }} </ion-card-subtitle>
+               <ion-card-title>
+                 <ion-label>
+                  <ion-icon name="person-circle-sharp" color="primary" slot="icon-only"></ion-icon>
+                  <ion-text class="ion-space-left">{{ userProfile?.firstname + " " + userProfile?.lastname}}</ion-text>
+                 </ion-label>
+                </ion-card-title>
+              <ion-card-title>
+                <ion-label>
+                  <ion-icon name="mail-sharp" color="primary" slot="icon-only"></ion-icon>
+                  <ion-text class="ion-space-left">{{ userProfile?.email }}</ion-text>
+                </ion-label>
+              </ion-card-title>     
           </ion-card-header>
-          <ion-card-content>
-            <p>
-              <ion-text color="danger" *ngIf="userProfile?.description">
-                {{ userProfile?.description }}
-              </ion-text>
-            </p>
-          </ion-card-content>
+            <ion-card-content>
+              <p>
+                <ion-card-title>{{ userProfile?.description }}</ion-card-title>
+              </p>
+            </ion-card-content>
+          </ion-card>  
         </ion-card>
       </ion-col>
     </ion-row>

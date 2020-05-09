@@ -45,7 +45,11 @@ export class NewAnnouncementPage implements OnInit {
       endDate: new FormControl(null,{
         updateOn:'change',
         validators:[Validators.required]
-      })
+      }),
+      location:new FormControl(null,{
+        updateOn:'change',
+        validators:[Validators.required]
+      }),
     });
   }
 
@@ -65,6 +69,7 @@ export class NewAnnouncementPage implements OnInit {
         this.form.value.phone,
         new Date(this.form.value.startDate),
         new Date(this.form.value.endDate),
+        this.form.value.location
       ).subscribe(()=>{
         loadingEl.dismiss();
         this.form.reset();

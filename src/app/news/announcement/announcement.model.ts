@@ -11,6 +11,7 @@ export class Announcement{
         public userId:string,
         public userPictureUrl:string,
         public phone:string,
+        public location:string,
         public message?:Message[]
     ){};
 }
