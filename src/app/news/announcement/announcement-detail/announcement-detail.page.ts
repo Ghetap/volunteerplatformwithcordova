@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NavController, AlertController } from '@ionic/angular';
 import { Announcement } from '../announcement.model';
 import { AuthService } from 'src/app/auth/auth.service';
-import { take, map, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 @Component({

@@ -1,19 +1,25 @@
 <ion-header>
-  <ion-toolbar color="medium">
+  <ion-toolbar color="secondary">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/news/tabs/announcement" color="primary"></ion-back-button>
     </ion-buttons>
-    <ion-title class="ion-text-center">{{ isLoading ? 'Loading...':'Detail Page' }}</ion-title>
+    <ion-title class="ion-text-center">Detail Page</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content *ngIf="!isLoading">
- <ion-grid>
+<ion-content>
+  <ion-grid *ngIf="isLoading">
+    <ion-row>
+      <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
+        <ion-spinner color="primary"></ion-spinner>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+ <ion-grid *ngIf="!isLoading">
    <ion-row>
      <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
       <ion-card color="primary">
-        <ion-card color="medium">
-
         <ion-card-header>
           <ion-avatar class="avatar" >
             <ion-img [src]="announcement.userPictureUrl"></ion-img>
@@ -23,7 +29,8 @@
         </ion-card-header>
         <ion-card-content>
           <ion-label>
-            <ion-icon name="cash-outline" color="primary" class="ion-space-left"></ion-icon>
+            <span class="ion-space-left" > Ofer pentru serviciu </span>
+            <ion-icon name="cash-outline"  color="secondary" class="ion-space-left"></ion-icon>
             <ion-text>
               {{ announcement.price + ' lei' }}
              </ion-text>
@@ -34,7 +41,7 @@
           <ion-icon 
               name="calendar" 
               class="ion-space-left"
-              color="primary"></ion-icon>
+              color="secondary"></ion-icon>
             <ion-text>
               {{ announcement.startDate | date}}
             </ion-text>
@@ -42,27 +49,26 @@
             <ion-icon 
               name="calendar" 
               class="ion-space-left"
-              color="primary"></ion-icon>
+              color="secondary"></ion-icon>
             <ion-text>
               {{ announcement.endDate | date}}
             </ion-text>
         </ion-label>
         <hr>
         <ion-label>
-          <ion-icon name="call-outline" color="primary" class="ion-space-left" ></ion-icon>
+          <ion-icon name="call-outline"  color="secondary" class="ion-space-left" ></ion-icon>
           <ion-text>
             {{ announcement.phone }}
           </ion-text>
         </ion-label>
         <hr>
         <ion-label>
-          <ion-icon name="location-sharp" color="primary" class="ion-space-left"></ion-icon>     
+          <ion-icon name="location-sharp"  color="secondary" class="ion-space-left"></ion-icon>     
           <ion-text>
             {{ announcement.location }}
           </ion-text>
         </ion-label>
 
-      </ion-card>
       </ion-card>
      </ion-col>
    </ion-row>

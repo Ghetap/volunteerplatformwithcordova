@@ -1,9 +1,9 @@
 <ion-header>
-  <ion-toolbar color="medium">
+  <ion-toolbar color="secondary">
     <ion-buttons slot="start">
       <ion-menu-button color="primary"></ion-menu-button>
     </ion-buttons>
-    <ion-title>Your Posts</ion-title>
+    <ion-title class="ion-text-center">Your Posts</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>
@@ -26,11 +26,11 @@
            #slidingAnnouncement>
             <app-announcement-item [announcement]="announcement"></app-announcement-item>
             <ion-item-options>
-              <ion-item-option color="danger" (click)="onDeleteAnnouncement(announcement.id,slidingAnnouncement)">
+              <ion-item-option color="primary" (click)="onDeleteAnnouncement(announcement.id,slidingAnnouncement)">
                 <ion-icon name="trash" slot="top"></ion-icon>
                 Delete
               </ion-item-option>
-              <ion-item-option side="start" color="tertiary" (click)="onUpdateAnnouncement(announcement.id,slidingAnnouncement)">
+              <ion-item-option side="start" color="secondary" (click)="onUpdateAnnouncement(announcement.id,slidingAnnouncement)">
                 Edit
                 <ion-icon name="create" slot="top"></ion-icon>
               </ion-item-option>

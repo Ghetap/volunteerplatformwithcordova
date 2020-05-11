@@ -5,8 +5,6 @@ import { LoadingController, AlertController} from '@ionic/angular';
 import { Observable } from 'rxjs';
 import {  AngularFirestore } from '@angular/fire/firestore';
 import { AuthService, AuthResponseData } from './auth.service';
-import { ProfileService } from '../profile/profile.service';
-import { UserProfile } from '../profile/userProfile.model';
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.page.html',
@@ -23,7 +21,6 @@ export class AuthPage implements OnInit{
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     private firestore:AngularFirestore,
-    private profileService:ProfileService
   ) {}
 
   ngOnInit() {
@@ -67,12 +64,14 @@ export class AuthPage implements OnInit{
           authObs.subscribe(
             resData => {
               console.log(resData);
-              this.firestore.doc(`users/${resData.localId}`)
-              .set({
-                email:email,
-                password:password,
-                imageUrl:"assets/icon/pctplaceholder.png"
-              })
+              if(resData.localId){
+                this.firestore.doc(`users/${resData.localId}`)
+                .set({
+                  email:email,
+                  password:password,
+                  imageUrl:"assets/icon/pctplaceholder.png"
+                })
+              }
               this.isLoading = false;
               loadingEl.dismiss();
               this.router.navigateByUrl('/profile');

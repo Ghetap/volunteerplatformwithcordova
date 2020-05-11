@@ -73,7 +73,8 @@ export class NewsService {
         }),
         map((data) =>{
           console.log(data);
-          return this.firestore.doc(`announcements/${docId}`)
+          if(docId){
+            return this.firestore.doc(`announcements/${docId}`)
             .set({
               id:docId,
               title:data.title,
@@ -86,6 +87,7 @@ export class NewsService {
               phone:data.phone,
               location:data.location
             })
+          }
         }),
         switchMap(()=>{return this._annoucements}),
         take(1),
@@ -204,13 +206,15 @@ export class NewsService {
               return of(upadetNews);
         }),
         switchMap(()=>{
-          return this.firestore.doc(`announcements/${id}`).update({
-            title:title,
-            description:description,
-            price:money,
-            phone:phone,
-            location:location
-          })
+          if(id){
+            return this.firestore.doc(`announcements/${id}`).update({
+              title:title,
+              description:description,
+              price:money,
+              phone:phone,
+              location:location
+            })
+          }
         }),
         take(1),
         tap(()=> {

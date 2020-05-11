@@ -1,9 +1,9 @@
 <ion-header>
-  <ion-toolbar color="medium">
+  <ion-toolbar color="secondary">
     <ion-buttons slot="start">
       <ion-menu-button color="primary"></ion-menu-button>
     </ion-buttons>
-    <ion-title>Announcements</ion-title>
+    <ion-title class="ion-text-center">Announcements</ion-title>
     <ion-buttons slot="primary">
       <ion-button routerLink="/news/tabs/announcement/new" color="primary">
         <ion-icon name="add" slot="icon-only"></ion-icon>
@@ -38,7 +38,7 @@
         <ion-virtual-scroll 
         [items]="listLoadedAnnouncements" 
         approxItemHeight="70px">
-          <ion-item
+          <ion-item 
             [routerLink]="['/', 'news', 'tabs', 'announcement', announcement.id]"
             detail
             *virtualItem="let announcement"
