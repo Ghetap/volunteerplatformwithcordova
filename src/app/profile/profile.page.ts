@@ -16,6 +16,7 @@ export class ProfilePage implements OnInit {
 
   userProfile:UserProfile;
   imageUrl:string;
+  isLoading = false;
   constructor(private profileService:ProfileService,
     private alertCtrl:AlertController,
     private router:Router) {
@@ -23,8 +24,10 @@ export class ProfilePage implements OnInit {
   ngOnInit() {}
 
   ionViewWillEnter(){
+    this.isLoading = true;
     this.profileService.getUserDetails().subscribe(user=>{
       this.userProfile = user;
+      this.isLoading = false;
       console.log(this.userProfile);
     },error=>{
       this.alertCtrl.create({
