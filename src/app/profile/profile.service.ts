@@ -60,15 +60,6 @@ export class ProfileService {
         userIdCopy = userId;
         return userId;
       }),
-      // switchMap((userId)=>{
-      //   var docRef = this.firestore.collection('users').doc(userId);
-      //   return docRef.get();
-      // }),
-      // take(1),
-      // switchMap(userdoc=>{
-      //   var data = userdoc.data();
-      //   return of(data);
-      // }),
       switchMap(()=>{
         user = new UserProfile(this.userId,this.email,firstname?firstname:'',
         lastname?lastname:'',url?url:'',description?description:'');

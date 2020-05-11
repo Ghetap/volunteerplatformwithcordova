@@ -39,17 +39,17 @@ export class EditProfilePage implements OnInit {
           userDetails.imageUrl,
           userDetails.description);
         this.form = new FormGroup({
-          profilePhoto:new FormControl('',{
+          profilePhoto:new FormControl(this.userToEdit.imageUrl,{
             updateOn:'change',
-            validators:[Validators.required]
+           // validators:[Validators.required]
           }),
           firstname: new FormControl(this.userToEdit.firstname,{
             updateOn:'change',
-            validators:[Validators.required]
+            //validators:[Validators.required]
           }),
           lastname:new FormControl(this.userToEdit.lastname,{
             updateOn:'change',
-            validators:[Validators.required]
+           // validators:[Validators.required]
           }),
           description: new FormControl(this.userToEdit.description ? this.userToEdit.description: '',{
             updateOn:'change',
@@ -62,7 +62,7 @@ export class EditProfilePage implements OnInit {
           header:'An error occured!',
           message:' User could not be fetched. Please try again later!',
           buttons:[{text:'Okay',handler:()=>{
-            this.router.navigate(['/profile']);
+            this.router.navigateByUrl('/profile');
           }}]
         }).then(alertEl=>{
           alertEl.present();
@@ -106,7 +106,7 @@ export class EditProfilePage implements OnInit {
       ).subscribe(()=>{
         loadingEl.dismiss();
         this.form.reset();
-        this.router.navigate(['/profile']);
+        this.router.navigateByUrl('/profile');
       });
     })
   }

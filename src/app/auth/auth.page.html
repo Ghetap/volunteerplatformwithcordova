@@ -5,31 +5,26 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  
+ 
   <form #f="ngForm" (ngSubmit)="onSubmit(f)">
     <ion-grid>
       <ion-row>
-        <ion-col size-sm="6" offset-sm="3">
+        <ion-col size-sm="4" offset-sm="4">
+          <div class="main">
+            <div class="icon">
+              <ion-icon style="width:90px;height:90px;color:#3880ff;" name="bonfire-outline" aria-hidden="true"> 
+              </ion-icon>
+            </div>
+            <div class="text">
+              <h3>𝐕𝐨𝐥𝐮𝐧𝐭𝐞𝐞𝐫𝐏𝐥𝐚𝐭𝐟𝐨𝐫𝐦</h3>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col  size-sm="4" offset-sm="4">
           <ion-card>
           <ion-list>
-            <!-- <ion-item *ngIf="!isLogin">
-              <ion-label position="floating">First Name</ion-label>
-              <ion-input
-                type="text"
-                ngModel
-                name="firstname"
-                required
-              ></ion-input>
-            </ion-item>
-            <ion-item *ngIf="!isLogin">
-              <ion-label position="floating">Last Name</ion-label>
-              <ion-input
-                type="text"
-                ngModel
-                name="lastname"
-                required
-              ></ion-input>
-            </ion-item> -->
             <ion-item>
               <ion-label position="floating">E-Mail</ion-label>
               <ion-input
@@ -81,30 +76,8 @@
         </ion-card>
         </ion-col>
       </ion-row>
-      <!-- <ion-row *ngIf="!isLogin">
-        <ion-col size-sm="6" offset-sm="3">
-          <ion-card class="ion-text-center">
-              <ion-button color="primary">
-                <ion-icon slot="icon-only" name="person-circle-outline"></ion-icon>
-                <ion-input type="file"
-                  (change)="onFileSelect($event)"
-                  ></ion-input>
-              </ion-button>
-              <div class="box">
-                <div class="preview">
-                  <img [src]="url" alt="">
-                </div>
-                <div class="uploadbtn">
-                  <label>
-                    <input (change)="uploadImage($event)" type="file" class="image-upload" accept="image/*">
-                  </label>
-                </div>
-              </div>
-          </ion-card>
-        </ion-col>
-      </ion-row> -->
       <ion-row>
-        <ion-col size-sm="6" offset-sm="3">
+        <ion-col size-sm="4" offset-sm="4">
           <ion-button
             type="button"
             color="medium"

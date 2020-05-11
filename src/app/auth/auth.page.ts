@@ -5,6 +5,8 @@ import { LoadingController, AlertController} from '@ionic/angular';
 import { Observable } from 'rxjs';
 import {  AngularFirestore } from '@angular/fire/firestore';
 import { AuthService, AuthResponseData } from './auth.service';
+import { ProfileService } from '../profile/profile.service';
+import { UserProfile } from '../profile/userProfile.model';
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.page.html',
@@ -20,11 +22,12 @@ export class AuthPage implements OnInit{
     private router: Router,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
-    private firestore:AngularFirestore
+    private firestore:AngularFirestore,
+    private profileService:ProfileService
   ) {}
 
-  ngOnInit() {}
-  
+  ngOnInit() {
+  }
   authenticate(
     email: string,
     password: string,
@@ -42,7 +45,6 @@ export class AuthPage implements OnInit{
               console.log(resData);
               this.isLoading = false;
               loadingEl.dismiss();
-              
               this.router.navigateByUrl('/news/tabs/announcement');
             },
             errRes => {
@@ -69,6 +71,7 @@ export class AuthPage implements OnInit{
               .set({
                 email:email,
                 password:password,
+                imageUrl:"assets/icon/pctplaceholder.png"
               })
               this.isLoading = false;
               loadingEl.dismiss();

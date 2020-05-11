@@ -24,9 +24,6 @@ export class ProfilePage implements OnInit {
 
   ionViewWillEnter(){
     this.profileService.getUserDetails().subscribe(user=>{
-      console.log(user);
-      if(!user.imageUrl)
-        user.imageUrl =  "assets/icon/pctplaceholder.png";
       this.userProfile = user;
       console.log(this.userProfile);
     },error=>{
@@ -36,7 +33,7 @@ export class ProfilePage implements OnInit {
         buttons:[{
           text:'Okay',
           handler:()=>{
-            this.router.navigate(['/news/tabs/announcement']);
+            this.router.navigateByUrl('/news/tabs/announcement');
           }
         }]
     })
