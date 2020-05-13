@@ -24,7 +24,7 @@
           #slidingUser>
            <app-community-item [user]="user"></app-community-item>
            <ion-item-options>
-             <ion-item-option color="primary" (click)="onSendMessage(user.id,slidingUser)">
+             <ion-item-option color="primary" (click)="onSendMessage(user.id,user.email,slidingUser)">
               <ion-icon name="chatbubble-sharp" slot="top"></ion-icon>
                 Message {{ user.lastname }}
              </ion-item-option>

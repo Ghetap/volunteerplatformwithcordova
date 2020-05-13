@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/news/tabs/community" color="primary"></ion-back-button>
+
+    </ion-buttons>
+    <ion-title class="ion-text-center">Chat Room</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+<div id="chatMessages">
+  <div class="message" 
+  *ngFor="let message of messages"
+  >
+      <div 
+      [class]="message.emailSender == this.senderEmail ? 'innerMessage messageRight' : 'innerMessage messageLeft'">
+        <div class="username"> {{message.emailSender}} </div>
+        <div class="message">{{ message.text }}</div>
+      </div>
+  </div>
+</div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar class="toolbar">
+    <div id="footer">
+
+      <div class="elem">
+      <ion-input type="text" [(ngModel)]="message"></ion-input>
+      </div>
+      <div class="elem">
+        <ion-button color="primary" (click)="sendMessage()">
+          <ion-icon color="secondary" name="send-sharp" slot="icon-only"></ion-icon>
+        </ion-button>
+      </div>
+
+    </div>
+  </ion-toolbar>
+</ion-footer>

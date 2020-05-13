@@ -49,6 +49,10 @@ const routes: Routes = [
           {
             path:'',
             loadChildren: () => import('./community/community.module').then( m => m.CommunityPageModule)
+          },
+          {
+            path: ':receiverId/:receiverEmail/:senderEmail',
+            loadChildren: () => import('./community/chat/chat.module').then( m => m.ChatPageModule)
           }
         ]
       },
