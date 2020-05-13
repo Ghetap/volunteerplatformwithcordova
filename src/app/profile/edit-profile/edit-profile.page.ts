@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfileService } from '../profile.service';
 import { NavController, LoadingController, AlertController } from '@ionic/angular';
-import { AngularFireStorage } from 'angularfire2/storage';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 @Component({
   selector: 'app-edit-profile',

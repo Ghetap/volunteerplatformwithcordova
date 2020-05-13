@@ -14,12 +14,12 @@ import { AngularFireModule } from '@angular/fire';
 import { environment} from '../environments/environment';
 import {AngularFireAuthModule} from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { Firebase } from '@ionic-native/firebase/ngx';
-import { ToastService } from './shared/toast.service';
-import { FcmService } from './shared/fcm.service';
-import { LocalNotifications} from '@ionic-native/local-notifications/ngx';
 import { IonicStorageModule } from '@ionic/storage';
-import {AngularFireStorageModule} from 'angularfire2/storage'
+import {AngularFireStorageModule} from '@angular/fire/storage'
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
+import { AngularFireFunctionsModule} from '@angular/fire/functions';
+import { FcmService } from './shared/fcm.service';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -29,6 +29,8 @@ import {AngularFireStorageModule} from 'angularfire2/storage'
     AppRoutingModule,
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireMessagingModule,
+    AngularFireFunctionsModule,
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireStorageModule,
@@ -37,10 +39,7 @@ import {AngularFireStorageModule} from 'angularfire2/storage'
     StatusBar,
     SplashScreen,
     AuthGuard,
-    Firebase,
-    ToastService,
     FcmService,
-    LocalNotifications,
   ],
   bootstrap: [AppComponent]
 })

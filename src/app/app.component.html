@@ -5,9 +5,9 @@
         <ion-title class="ion-text-center">
           Menu
         </ion-title>
-        <ion-avatar class="avatar">
+        <!-- <ion-avatar class="avatar">
           <ion-img [src]="userProfile?.imageUrl"></ion-img>
-        </ion-avatar>
+        </ion-avatar> -->
       </ion-toolbar>
     </ion-header>
 
@@ -29,6 +29,18 @@
           <ion-item lines="none" (click)="onLogout()" button>
             <ion-icon name="exit" slot="start" color="secondary"></ion-icon>
             <ion-label >Logout</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle>
+          <ion-item lines="none" (click)="subscribeToNotifications()" button>
+            <ion-icon name="notifications-circle-sharp" slot="start" color="secondary"></ion-icon>
+            <ion-label>Subscribe to Notifications</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle>
+          <ion-item lines="none" (click)="unsubscribeFromNotifications()" button>
+            <ion-icon name="notifications-off-circle-sharp" slot="start" color="secondary" ></ion-icon>
+            <ion-label >Unsubscribe</ion-label>
           </ion-item>
         </ion-menu-toggle>
       </ion-list>

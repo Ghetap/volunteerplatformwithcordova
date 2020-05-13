@@ -20,7 +20,6 @@ export class CommunityPage implements OnInit,OnDestroy {
   ionViewWillEnter(){
     this.communitySubscription = this.communityService.fetchUsers().subscribe(listOfUsers=>{
       this.usersOfCommunity = listOfUsers;
-      console.log(this.usersOfCommunity);
     })
   }
   ngOnDestroy(){

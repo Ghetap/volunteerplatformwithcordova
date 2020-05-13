@@ -1,29 +1,37 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, OnDestroy} from '@angular/core';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { LoadingController, AlertController} from '@ionic/angular';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import {  AngularFirestore } from '@angular/fire/firestore';
 import { AuthService, AuthResponseData } from './auth.service';
+import { FcmService } from '../shared/fcm.service';
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.page.html',
   styleUrls: ['./auth.page.scss']
 })
 
-export class AuthPage implements OnInit{
+export class AuthPage implements OnInit, OnDestroy{
   isLoading = false;
   isLogin = true;
   isLoginAsStudent = true;
+  token;
+  authSubcription:Subscription;
   constructor(
     private authService: AuthService,
     private router: Router,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     private firestore:AngularFirestore,
+    private fcmService:FcmService
   ) {}
 
   ngOnInit() {
+  }
+  ngOnDestroy(){
+    if(this.authSubcription)
+      this.authSubcription.unsubscribe();
   }
   authenticate(
     email: string,
@@ -37,9 +45,8 @@ export class AuthPage implements OnInit{
         let authObs: Observable<AuthResponseData>;
         if (this.isLogin) {
           authObs = this.authService.login(email, password);
-          authObs.subscribe(
+          this.authSubcription = authObs.subscribe(
             resData => {
-              console.log(resData);
               this.isLoading = false;
               loadingEl.dismiss();
               this.router.navigateByUrl('/news/tabs/announcement');
@@ -61,20 +68,18 @@ export class AuthPage implements OnInit{
 
         } else {
           authObs = this.authService.signup(email, password);
-          authObs.subscribe(
+          this.authSubcription = authObs.subscribe(
             resData => {
-              console.log(resData);
-              if(resData.localId){
+                console.log("register")
                 this.firestore.doc(`users/${resData.localId}`)
                 .set({
                   email:email,
                   password:password,
                   imageUrl:"assets/icon/pctplaceholder.png"
                 })
-              }
-              this.isLoading = false;
-              loadingEl.dismiss();
-              this.router.navigateByUrl('/profile');
+                this.isLoading = false;
+                loadingEl.dismiss();
+                this.router.navigateByUrl('/news/tabs/announcement');
             },
             errRes => {
               loadingEl.dismiss();
@@ -97,7 +102,6 @@ export class AuthPage implements OnInit{
   onSwitchAuthMode() {
     this.isLogin = !this.isLogin;
   }
-
   onSubmit(form: NgForm) {
     if (!form.valid) {
       return;
@@ -111,7 +115,6 @@ export class AuthPage implements OnInit{
       this.authenticate(email, password);
       form.reset();
     }
-   
   }
   private showAlert(message: string) {
     this.alertCtrl

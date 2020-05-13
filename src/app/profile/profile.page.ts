@@ -28,7 +28,6 @@ export class ProfilePage implements OnInit {
     this.profileService.getUserDetails().subscribe(user=>{
       this.userProfile = user;
       this.isLoading = false;
-      console.log(this.userProfile);
     },error=>{
       this.alertCtrl.create({
         header:'An error occured',

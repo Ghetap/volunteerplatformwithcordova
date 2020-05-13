@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Notification } from './notification.model';
+import { FcmService } from 'src/app/shared/fcm.service';
 
 @Component({
   selector: 'app-notificaions',
@@ -8,11 +9,17 @@ import { Notification } from './notification.model';
 })
 export class NotificationsPage implements OnInit {
 
-  newNotifications:Notification[];
+  notifications;
   seenNotifications:Notification[];
-  constructor() { }
+  constructor(private fcmService:FcmService) { }
 
   ngOnInit() {
+
+  }
+
+  ionViewWillEnter(){
+    //this.fcmService.receiveMessage();
+    this.notifications = this.fcmService.currentMessage;
   }
 
 }

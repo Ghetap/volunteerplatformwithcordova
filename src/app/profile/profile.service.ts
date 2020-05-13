@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { take, map, switchMap, tap } from 'rxjs/operators';
-import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { User } from '../auth/user.model';
 import { UserProfile } from './userProfile.model';
 import { of, BehaviorSubject } from 'rxjs';
-import { AngularFireStorage } from 'angularfire2/storage';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 @Injectable({
   providedIn: 'root'

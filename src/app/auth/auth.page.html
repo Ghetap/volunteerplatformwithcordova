@@ -9,16 +9,10 @@
   <form #f="ngForm" (ngSubmit)="onSubmit(f)">
     <ion-grid>
       <ion-row>
-        <ion-col size-sm="4" offset-sm="4">
-          <div class="main">
-            <div class="icon">
-              <ion-icon style="width:90px;height:90px;color:#3880ff;" name="bonfire-outline" aria-hidden="true"> 
-              </ion-icon>
-            </div>
-            <div class="text">
-              <h3>𝐕𝐨𝐥𝐮𝐧𝐭𝐞𝐞𝐫𝐏𝐥𝐚𝐭𝐟𝐨𝐫𝐦</h3>
-            </div>
-          </div>
+        <ion-col size-sm="4" offset-sm="4" class="ion-text-center">
+          <ion-icon style="width:90px;height:90px;color:#3dc2ff;" name="bonfire-outline" aria-hidden="true"> 
+          </ion-icon>
+          <h3>𝐕𝐨𝐥𝐮𝐧𝐭𝐞𝐞𝐫𝐏𝐥𝐚𝐭𝐟𝐨𝐫𝐦</h3>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -76,6 +70,16 @@
         </ion-card>
         </ion-col>
       </ion-row>
+
+      <!-- <ion-row  *ngIf="!isLogin" class="ion-text-center">
+        <ion-col size-sm="4" offset-sm="4">
+          <ion-button lines="none" (click)="subscribeToNotifications()" color="secondary">
+            <ion-icon name="notifications-circle-sharp" slot="start" color="primary"></ion-icon>
+            Subscribe for receiving Notifications
+          </ion-button>
+        </ion-col>
+      </ion-row> -->
+
       <ion-row>
         <ion-col size-sm="4" offset-sm="4">
           <ion-button
@@ -95,6 +99,7 @@
           >
             {{ isLogin ? 'Login' : 'Signup' }}
           </ion-button>
+         
         </ion-col>
       </ion-row>
     </ion-grid>

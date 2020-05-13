@@ -3,7 +3,7 @@ import { AuthService } from '../auth/auth.service';
 import { BehaviorSubject, of} from 'rxjs';
 import { Announcement } from './announcement/announcement.model';
 import { take, switchMap, map, tap } from 'rxjs/operators';
-import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -74,6 +74,7 @@ export class NewsService {
         map((data) =>{
           console.log(data);
           if(docId){
+            console.log(docId);
             return this.firestore.doc(`announcements/${docId}`)
             .set({
               id:docId,
@@ -207,6 +208,7 @@ export class NewsService {
         }),
         switchMap(()=>{
           if(id){
+            console.log(id);
             return this.firestore.doc(`announcements/${id}`).update({
               title:title,
               description:description,

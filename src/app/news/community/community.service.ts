@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { UserProfile } from 'src/app/profile/userProfile.model';
-import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { map, tap } from 'rxjs/operators';
 
 @Injectable({
@@ -17,13 +17,11 @@ export class CommunityService {
   constructor(private firestore:AngularFirestore) { }
 
   fetchUsers (){
-    console.log('fetchUsers');
     return this.firestore.collection('users').get()
     .pipe(map(resData=>{
       const users = [];
       resData.docs.map(doc=>{
         const usersDoc = doc.data();
-        console.log(usersDoc);
         const userId = doc.id;
         users.push(
           new UserProfile(
