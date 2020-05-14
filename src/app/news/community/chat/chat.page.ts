@@ -1,62 +1,75 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, NgZone, OnChanges, AfterViewInit, AfterContentChecked } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { NavController } from '@ionic/angular';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { CommunityService } from '../community.service';
-import { Subscription } from 'rxjs';
-import { ProfileService } from 'src/app/profile/profile.service';
+import { Subscription, Observable, of, BehaviorSubject, combineLatest } from 'rxjs';
+import { Message } from '../message.model';
+import { switchMap, map, take, tap } from 'rxjs/operators';
+import { AuthService } from 'src/app/auth/auth.service';
+import { collection } from 'rxfire/firestore';
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.page.html',
   styleUrls: ['./chat.page.scss'],
 })
-export class ChatPage implements OnInit,OnDestroy {
+export class ChatPage implements OnInit,OnDestroy{
 
-  constructor(
-    public firestore:AngularFirestore,
-    private navCtrl:NavController,
-    private route:ActivatedRoute,
-    private profileService:ProfileService,
-    private communityService:CommunityService
-    ) 
-    {
-      this.communityService.messages.subscribe(mes=>{
-        console.log(mes);
-        this.messages = mes;
-      })
-    }
+    senderId;
+    receiverId;
+    receiverEmail;
+    senderEmail;
+    message;
+    chat$:Observable<any>;
+    messageSubscription:Subscription;
+    getMessageSubcritpion:Subscription;
+    constructor(
+      public firestore:AngularFirestore,
+      private navCtrl:NavController,
+      private route:ActivatedRoute,
+      private authService:AuthService,
+      private communityService:CommunityService
+    ) {} 
 
-  receiverId;
-  receiverEmail;
-  senderEmail;
-  message;
-  messages;
-  messageSubscription:Subscription;
   ngOnInit() {
-    this.profileService.getUserDetails().subscribe
     this.route.paramMap.subscribe(
       paramMap=>{
-        if(!paramMap.has('receiverId') || !paramMap.has('receiverEmail')){
+        if(!paramMap.has('receiverId') || !paramMap.has('receiverEmail') || !paramMap.has('senderEmail')){
             this.navCtrl.navigateBack('/news/tabs/announcement');
             return;
         }
         this.receiverId = paramMap.get('receiverId');
+        console.log(this.receiverId);
         this.receiverEmail = paramMap.get('receiverEmail');
-        this.senderEmail = paramMap.get('senderEmail');
         console.log(this.receiverEmail);
+        this.senderEmail = paramMap.get('senderEmail');
+        console.log(this.senderEmail);
+        this.authService.userId.subscribe(userId=>{this.senderId=userId})
+
+        //this.getMessageSubcritpion = this.communityService.getConversationBetweenSenderReceiver(this.receiverId).subscribe();
       }
     )
+      this.chat$ = this.communityService.getChat(this.senderId);
+
+    // this.messageSubscription = this.communityService.messages.subscribe(mes=>{
+    //   console.log(mes);
+    //   this.messages.next(mes);  
+    // })
   }
   sendMessage(){
-    this.messageSubscription = this.communityService.
-    saveConversation(this.receiverId,this.receiverEmail,this.message).subscribe();
+    //let docId = Math.random().toString();
+    let docId = this.senderId;
+    this.communityService.sendMessage(docId,this.receiverId,this.receiverEmail,this.message);
     this.message="";
   }
-  ionViewDidLoad(){
+  trackByCreated(i,msg){
+    return msg.createdAt;
   }
   ngOnDestroy(){
     if(this.messageSubscription)
       this.messageSubscription.unsubscribe();
+    if(this.getMessageSubcritpion)
+      this.getMessageSubcritpion.unsubscribe();
   }
 }

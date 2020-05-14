@@ -4,6 +4,7 @@ export class Message{
         public senderId:string,
         public text:string,
         public emailReceiver:string,
-        public emailSender:string
+        public emailSender:string,
+        public createdAt:Date
     ){};
 }

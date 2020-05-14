@@ -33,16 +33,18 @@ export class CommunityPage implements OnInit,OnDestroy {
     if(this.communitySubscription)
       this.communitySubscription.unsubscribe();
   }
-  onSendMessage(userId:string,email:string, slidingUser:IonItemSliding){
+  onSendMessage(userId:string,receiverEmail:string, slidingUser:IonItemSliding){
     slidingUser.close();
     this.loadingCtrl.create({
       message:'Opening Chat...'
     }).then(loadingEl=>{
       loadingEl.present();
         let senderEmail;
-        this.communityService.getSenderEmail().subscribe((email)=>senderEmail=email)
+        this.communityService.getSenderEmail().subscribe((email)=>{
+          senderEmail=email
+          this.router.navigate(['/news/tabs/community/chat/'+userId+'/'+receiverEmail+'/'+senderEmail]);
+        })
         loadingEl.dismiss();
-        this.router.navigate(['/news/tabs/community/chat'+userId+'/'+email+'/'+senderEmail]);
       });
   }
 }

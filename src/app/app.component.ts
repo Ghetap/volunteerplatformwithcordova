@@ -25,8 +25,7 @@ export class AppComponent implements OnInit,OnDestroy{
     private statusBar: StatusBar,
     private authService:AuthService,
     private router:Router,
-    private fcmService:FcmService
-  ) {
+    private fcmService:FcmService ) {
     this.fcmService.requestPermission().subscribe();
     this.initializeApp();
   }

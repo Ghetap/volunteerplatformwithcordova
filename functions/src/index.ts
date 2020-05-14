@@ -8,6 +8,33 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
 admin.initializeApp()
+const db =admin.firestore();
+const settings = {timestampsInSnapshots:true};
+db.settings(settings);
+
+export const archiveChat = functions.firestore.document('chat/{chatId}')
+.onUpdate(change=>{
+    const data = change.after.data();
+    const maxLen = 50;
+    var msgLen;
+    if(data)
+        msgLen = data.messages.length;
+    const charLen = JSON.stringify(data).length;
+
+    //archive or delete old messages
+    if(charLen >= 10000 || msgLen >= maxLen){
+        const batch = db.batch();
+        if(data)
+            data.messages.splice(0,msgLen-maxLen);
+        const ref = db.collection('chat').doc(change.after.id);
+        batch.set(ref,data,{merge:true})
+        return batch.commit();
+    }else{
+        return null;
+    }
+
+})
+
 export const subscribeToTopic = functions.https.onCall(
     async (data,context)=>{
         console.log(data);

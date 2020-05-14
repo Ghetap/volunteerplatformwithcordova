@@ -10,15 +10,14 @@
 
 <ion-content class="ion-padding">
 <div id="chatMessages">
-  <div class="message" 
-  *ngFor="let message of messages"
-  >
-      <div 
-      [class]="message.emailSender == this.senderEmail ? 'innerMessage messageRight' : 'innerMessage messageLeft'">
-        <div class="username"> {{message.emailSender}} </div>
-        <div class="message">{{ message.text }}</div>
-      </div>
+  <div  *ngIf="chat$ | async as chat">
+  <div class="message" *ngFor="let message of chat.messages; trackBy: trackByCreated">
+    <div [class]="message.senderEmail === this.senderEmail ? 'innerMessage messageRight' : 'innerMessage messageLeft'">
+      <div class="username">{{message.senderEmail}} </div>
+      <div class="message">{{ message.text }}</div>
+    </div>
   </div>
+</div>
 </div>
 </ion-content>
 
