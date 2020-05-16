@@ -21,18 +21,22 @@
      <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
       <ion-card color="light">
         <ion-card-header>
-          <ion-avatar class="avatar" >
-            <ion-img [src]="announcement.userPictureUrl"></ion-img>
-          </ion-avatar>
           <ion-card-title>{{ announcement.title }}</ion-card-title>
           <ion-card-subtitle>{{ announcement.description }}</ion-card-subtitle>
         </ion-card-header>
+        <ion-img [src]="announcement.announcementPictureUrl"></ion-img>
         <ion-card-content>
           <ion-label>
-            <span class="ion-space-left" > Payment </span>
             <ion-icon name="cash-outline"  color="secondary" class="ion-space-left"></ion-icon>
+            <span class="ion-space-left" > Payment: </span>
             <ion-text>
               {{ announcement.price + ' lei' }}
+             </ion-text>
+             <hr>
+             <ion-icon name="bookmark-sharp" color="secondary" class="ion-space-left"></ion-icon>
+             <span class="ion-space-left" > Category: </span>
+             <ion-text>
+              {{ announcement.category }}
              </ion-text>
           </ion-label>
         </ion-card-content>
@@ -56,18 +60,35 @@
         </ion-label>
         <hr>
         <ion-label>
-          <ion-icon name="call-outline"  color="secondary" class="ion-space-left" ></ion-icon>
+          <ion-icon 
+              name="location-sharp"
+              class="ion-space-left"
+              color="secondary"></ion-icon>
+          <span class="ion-space-left" > City: </span>
           <ion-text>
-            {{ announcement.phone }}
+            {{ announcement.city}}
+          </ion-text>
+          <ion-icon 
+          name="home-sharp" 
+          class="ion-space-left"
+          color="secondary"></ion-icon>
+          <span class="ion-space-left" > Street: </span>
+          <ion-text>
+            {{ announcement.street }}
           </ion-text>
         </ion-label>
         <hr>
         <ion-label>
-          <ion-icon name="location-sharp"  color="secondary" class="ion-space-left"></ion-icon>     
+          <ion-icon name="call-outline"  color="secondary" class="ion-space-left" ></ion-icon>
+          <span class="ion-space-left" > Phone: </span>
           <ion-text>
-            {{ announcement.location }}
+            {{ announcement.phone }}
           </ion-text>
         </ion-label>
+        <ion-chip slot="end">
+          <ion-icon name="eye-sharp" color="secondary"></ion-icon>
+          <ion-label> {{ announcement.numberOfVisualisations }}</ion-label>
+        </ion-chip>
       </ion-card>
      </ion-col>
    </ion-row>

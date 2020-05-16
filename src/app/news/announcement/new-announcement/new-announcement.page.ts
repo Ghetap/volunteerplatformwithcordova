@@ -1,8 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController, ModalController, ActionSheetController } from '@ionic/angular';
+import { LoadingController } from '@ionic/angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NewsService } from '../../news.service';
+import { AngularFireStorage } from '@angular/fire/storage';
+
 
 @Component({
   selector: 'app-new-announcement',
@@ -18,6 +20,7 @@ export class NewAnnouncementPage implements OnInit {
   constructor(
     private router:Router,
     private loadingCtrl:LoadingController,
+    private astorage:AngularFireStorage,
     private newsService:NewsService) { }
 
   ngOnInit() {
@@ -46,10 +49,23 @@ export class NewAnnouncementPage implements OnInit {
         updateOn:'change',
         validators:[Validators.required]
       }),
-      location:new FormControl(null,{
+      city:new FormControl(null,{
         updateOn:'change',
         validators:[Validators.required]
       }),
+      street:new FormControl(null,{
+        updateOn:'change',
+        //validators:[Validators.required]
+      }),
+      category:new FormControl(null,{
+        updateOn:'change',
+        validators:[Validators.required]
+      }),
+      announcementPicture:new FormControl(null,{
+        updateOn:'change',
+       // validators:[Validators.required]
+      }),
+     
     });
   }
 
@@ -69,7 +85,10 @@ export class NewAnnouncementPage implements OnInit {
         this.form.value.phone,
         new Date(this.form.value.startDate),
         new Date(this.form.value.endDate),
-        this.form.value.location
+        this.form.value.city,
+        this.form.value.street ? this.form.value.street : '',
+        this.form.value.announcementPicture,
+        this.form.value.category
       ).subscribe(()=>{
         loadingEl.dismiss();
         this.form.reset();
@@ -81,5 +100,17 @@ export class NewAnnouncementPage implements OnInit {
     const startDate = new Date(this.form.value.startDate);
     const endDate = new Date(this.form.value.endDate);
     return endDate > startDate;
+  }
+  onFileChange(event) {
+    var file = event.target.files[0];
+    this.uploadPicture(file);
+      
+  }
+  async uploadPicture(imageUri){
+    const storageRef = this.astorage.storage.ref(`announcements/${imageUri.name}`);
+    await storageRef.put(imageUri);
+    this.form.patchValue({
+      announcementPicture:await storageRef.getDownloadURL()
+    })
   }
 }

@@ -9,16 +9,16 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-<div id="chatMessages">
-  <div  *ngIf="chat$ | async as chat">
-  <div class="message" *ngFor="let message of chat.messages; trackBy: trackByCreated">
-    <div [class]="message.senderEmail === this.senderEmail ? 'innerMessage messageRight' : 'innerMessage messageLeft'">
-      <div class="username">{{message.senderEmail}} </div>
-      <div class="message">{{ message.text }}</div>
-    </div>
-  </div>
-</div>
-</div>
+  <ng-container *ngIf= "chat$ |async as chat">
+    <div id="chatMessages">
+        <div class="message" *ngFor="let message of chat.messages; trackBy: trackByCreated">
+            <div [class]="message.email === this.senderEmail ? 'innerMessage messageRight' : 'innerMessage messageLeft'">
+              <div class="username">{{message.email}} </div>
+              <div class="message">{{ message.text }}</div>
+            </div>
+        </div>
+      </div>
+  </ng-container>
 </ion-content>
 
 <ion-footer>

@@ -32,9 +32,11 @@ export class NewsService {
     phone:string,
     startDate:Date,
     endDate:Date,
-    location:string
+    city:string,
+    street:string,
+    announcementPictureUrl:string,
+    category:string
     ){
-      var userIdCopy;
       var newAnnouncement;
       let docId = Math.random().toString();
       return this.authService.userId.pipe(
@@ -43,20 +45,10 @@ export class NewsService {
           if(!userId){
             throw new Error('User not found!')
           }
-          userIdCopy = userId;
           return userId;
-        }),switchMap((userId)=>{
-          var docRef = this.firestore.collection('users').doc(userId);
-          return docRef.get()
         }),
-        take(1),
-        switchMap(userDocData=>{
-          var data = userDocData.data();
-          let pictureUrl=''
-          if(data.imageUrl){
-             pictureUrl=data.imageUrl;
-          }
-          console.log(userIdCopy);
+        switchMap((userId)=>{
+          console.log(userId)
           newAnnouncement = new Announcement(
             docId,
             title,
@@ -64,29 +56,37 @@ export class NewsService {
             money,
             startDate,
             endDate,
-            userIdCopy,
-            pictureUrl,
+            userId,
             phone,
-            location
+            city,
+            street,
+            category,
+            0,
+            announcementPictureUrl,
+            [],
           )
           return of(newAnnouncement);
         }),
+        take(1),
         map((data) =>{
           console.log(data);
           if(docId){
             console.log(docId);
             return this.firestore.doc(`announcements/${docId}`)
             .set({
-              id:docId,
               title:data.title,
               description:data.description,
               price:data.price,
               dateFrom:data.startDate,
               dateTo:data.endDate,
               userId:data.userId,
-              authorUrl:data.userPictureUrl,
+              announcementPictureUrl:data.announcementPictureUrl,
               phone:data.phone,
-              location:data.location
+              city:data.city,
+              street:data.street,
+              category:data.category,
+              numberofVisualisations:data.category,
+              messages:data.messages
             })
           }
         }),
@@ -113,9 +113,14 @@ export class NewsService {
             announcemetDoc.dateFrom.toDate(),
             announcemetDoc.dateTo.toDate(),
             announcemetDoc.userId,
-            announcemetDoc.authorUrl,
             announcemetDoc.phone,
-            announcemetDoc.location)
+            announcemetDoc.city,
+            announcemetDoc.street,
+            announcemetDoc.category,
+            announcemetDoc.numberofVisualisations,
+            announcemetDoc.announcementPictureUrl,
+            announcemetDoc.messages,
+            )
         )
       })
       return announcements;
@@ -171,9 +176,13 @@ export class NewsService {
             announcemetDoc.dateFrom.toDate(),
             announcemetDoc.dateTo.toDate(),
             announcemetDoc.userId,
-            announcemetDoc.authorUrl,
             announcemetDoc.phone,
-            announcemetDoc.location)
+            announcemetDoc.city,
+            announcemetDoc.street,
+            announcemetDoc.category,
+            announcemetDoc.numberofVisualisations,
+            announcemetDoc.announcementPictureUrl,
+            announcemetDoc.messages)
         )
       })
       return announcements;
@@ -183,7 +192,18 @@ export class NewsService {
     })
     );
   }
-  updateAnnouncement(id:string, title:string, description:string, money:number,phone:string,location:string){
+  updateAnnouncement(
+    id:string, 
+    title:string, 
+    description:string, 
+    money:number, 
+    phone:string,
+    announcementPictureUrl:string,
+    newStartDate:Date,
+    newEndDate:Date,
+    category:string,
+    city:string,
+    street:string){
         let upadetNews = [];
         return this.myannouncements.pipe(
           take(1),
@@ -196,12 +216,16 @@ export class NewsService {
               title,
               description,
               money,
-              oldAnnouncement.startDate,
-              oldAnnouncement.endDate,
+              newStartDate,
+              newEndDate,
               oldAnnouncement.userId,
-              oldAnnouncement.userPictureUrl,
               phone,
-              location);
+              city,
+              street,
+              category,
+              oldAnnouncement.numberofVisualisations,
+              announcementPictureUrl,
+              oldAnnouncement.messages);
               console.log(toUpdateAnnouncementIndex);
               console.log(upadetNews);
               return of(upadetNews);

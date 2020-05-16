@@ -9,9 +9,12 @@ export class Announcement{
         public startDate:Date,
         public endDate:Date,
         public userId:string,
-        public userPictureUrl:string,
         public phone:string,
-        public location:string,
-        public message?:Message[]
+        public city:string,
+        public street:string,
+        public category:string,
+        public numberOfVisualisations:number,
+        public announcementPictureUrl:string,
+        public message:Message[]
     ){};
 }

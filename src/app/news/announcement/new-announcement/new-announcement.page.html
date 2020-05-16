@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button color="primary" defaultHref="/news/tabs/announcement"></ion-back-button>
     </ion-buttons>
-    <ion-title class="ion-text-center"> New Announcement</ion-title>
+    <ion-title class="ion-text-center"> Create Announcement</ion-title>
     <ion-buttons slot="primary" color="primary">
       <ion-button color="primary"
       (click)="onCreateAnnouncement()"
@@ -18,6 +18,9 @@
 
 <ion-content>
 <form [formGroup]="form" class="ion-text-center ion-padding">
+  <ion-avatar class="avatar">
+    <ion-img src="assets/icon/announcement.png"></ion-img>
+  </ion-avatar>
   <ion-grid>
     <ion-row>
       <ion-col size-sm="6" offset-sm="3">
@@ -67,12 +70,32 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size-sm="6" offset-sm="3">
+        <ion-col size-sm="3" offset-sm="3">
           <ion-item>
-            <ion-label position="floating">Location</ion-label>
+            <ion-label position="floating">City</ion-label>
             <ion-input
              type="text"
-             formControlName="location"
+             formControlName="city"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size-sm="3" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Street</ion-label>
+            <ion-input
+             type="text"
+             formControlName="street"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Choose Category</ion-label>
+            <ion-input
+             type="text"
+             formControlName="category"
             ></ion-input>
           </ion-item>
         </ion-col>
@@ -104,6 +127,14 @@
             ></ion-datetime>
           </ion-item>
         </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col  size-sm="6" offset-sm="3">
+            <ion-input (change)="onFileChange($event)" 
+            type="file" writeFile="true" 
+            formControlName="announcementPicture" multiple>
+          </ion-input>
+      </ion-col>
       </ion-row>
   </ion-grid>
 </form>

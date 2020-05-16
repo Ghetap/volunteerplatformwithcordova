@@ -38,13 +38,17 @@ export class AnnouncementDetailPage implements OnInit,OnDestroy {
             announcement.id,
             announcement.title,
             announcement.description,
-            +announcement.price,
+            announcement.price,
             announcement.dateFrom.toDate(),
             announcement.dateTo.toDate(),
             announcement.userId,
-            announcement.authorUrl,
             announcement.phone,
-            announcement.location);
+            announcement.city,
+            announcement.street,
+            announcement.category,
+            announcement.numberofVisualisations,
+            announcement.announcementPictureUrl,
+            announcement.messages);
             this.isLoading = false;
             console.log(this.announcement);
           },error=>{

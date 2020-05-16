@@ -33,7 +33,7 @@ export class CommunityPage implements OnInit,OnDestroy {
     if(this.communitySubscription)
       this.communitySubscription.unsubscribe();
   }
-  onSendMessage(userId:string,receiverEmail:string, slidingUser:IonItemSliding){
+  onSendMessage(receiverEmail:string, slidingUser:IonItemSliding){
     slidingUser.close();
     this.loadingCtrl.create({
       message:'Opening Chat...'
@@ -42,7 +42,19 @@ export class CommunityPage implements OnInit,OnDestroy {
         let senderEmail;
         this.communityService.getSenderEmail().subscribe((email)=>{
           senderEmail=email
-          this.router.navigate(['/news/tabs/community/chat/'+userId+'/'+receiverEmail+'/'+senderEmail]);
+          //verificam daca exista un chat intre cele doua persoane
+          this.communityService.chatExists(senderEmail,receiverEmail).subscribe(snapshot=>{
+            if(snapshot.exists)
+              this.router.navigate(['/news/tabs/community/chat/'+'/'+senderEmail+'/'+receiverEmail+'/'+true]);
+            else if(!snapshot.exists){
+              this.communityService.chatExists(receiverEmail,senderEmail).subscribe(snapshot=>{
+                if(!snapshot.exists){
+                  this.communityService.create(receiverEmail,senderEmail);
+                }
+                this.router.navigate(['/news/tabs/community/chat/'+'/'+receiverEmail+'/'+senderEmail+'/'+false])
+              })
+            }
+          })
         })
         loadingEl.dismiss();
       });
