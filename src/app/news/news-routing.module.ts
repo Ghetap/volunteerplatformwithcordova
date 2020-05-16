@@ -29,18 +29,6 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'community',children:[
-          {
-            path:'',
-            loadChildren: () => import('./community/community.module').then( m => m.CommunityPageModule)
-          },
-          {
-            path: 'chat/:receiverEmail/:senderEmail/:bool',
-            loadChildren: () => import('./community/chat/chat.module').then( m => m.ChatPageModule)
-          }
-        ]
-      },
-      {
         path: 'notifications',children:[
           {
             path:'',

@@ -35,7 +35,7 @@ export class NewAnnouncementPage implements OnInit {
       }),
       price:new FormControl(null,{
         updateOn:'change',
-        validators:[Validators.required,Validators.min(1)]
+        validators:[Validators.min(1)]
       }),
       phone: new FormControl(null,{
         updateOn:'change',
@@ -78,6 +78,7 @@ export class NewAnnouncementPage implements OnInit {
       message:'Creating announcement...'
     }).then(loadingEl=>{
       loadingEl.present();
+      console.log(this.form.value.announcementPicture)
       this.newsService.addAnouncement(
         this.form.value.title,
         this.form.value.description,
@@ -87,7 +88,7 @@ export class NewAnnouncementPage implements OnInit {
         new Date(this.form.value.endDate),
         this.form.value.city,
         this.form.value.street ? this.form.value.street : '',
-        this.form.value.announcementPicture,
+        this.form.value.announcementPicture ? this.form.value.announcementPicture:'assets/icon/announcement.png',
         this.form.value.category
       ).subscribe(()=>{
         loadingEl.dismiss();

@@ -30,6 +30,8 @@ export class ProfileService {
     let lastname;
     let imageUrl;
     let description;
+    let profession;
+    let where;
     return this.authService.userId.pipe(
       switchMap((userId)=>{
         this.userId = userId;
@@ -44,12 +46,14 @@ export class ProfileService {
           lastname = userData.lastname ? userData.lastname:'';
           imageUrl = userData.imageUrl ? userData.imageUrl:'';
           description = userData.description ? userData.description:'';
-        return new UserProfile(this.userId,this.email,firstname,lastname,imageUrl,description);
+          profession = userData.profession ? userData.profession :'';
+          where = userData.where ? userData.where : '';
+        return new UserProfile(this.userId,this.email,firstname,lastname,profession,where,imageUrl,description);
       }),
       tap((user)=>this._userProfile.next(user))
     )
   }
-  updateUserProfile(firstname?:string , lastname?:string, description?:string, url?:string){
+  updateUserProfile(firstname:string , lastname:string, description:string, url:string,profession:string,where:string){
     var userIdCopy;
     var user;
     return this.authService.userId.pipe(
@@ -61,14 +65,16 @@ export class ProfileService {
         return userId;
       }),
       switchMap(()=>{
-        user = new UserProfile(this.userId,this.email,firstname?firstname:'',
-        lastname?lastname:'',url?url:'',description?description:'');
+        user = new UserProfile(this.userId,this.email,firstname,
+        lastname,profession,where,url?url:'',description?description:'');
         return of(user)
       }),
       switchMap((user)=>{
         return this.firestore.collection('users').doc(userIdCopy).update({
           firstname: user.firstname,
           lastname: user.lastname,
+          profession:user.profession,
+          where:user.where,
           description: user.description,
           imageUrl: user.imageUrl,
         });

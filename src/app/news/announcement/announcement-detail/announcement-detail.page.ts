@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NewsService } from '../../news.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavController, AlertController } from '@ionic/angular';
+import { NavController, AlertController, IonItemSliding } from '@ionic/angular';
 import { Announcement } from '../announcement.model';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Subscription } from 'rxjs';
+import { UserProfile } from 'src/app/profile/userProfile.model';
+import { ProfileService } from 'src/app/profile/profile.service';
 
 @Component({
   selector: 'app-announcement-detail',
@@ -16,13 +18,13 @@ export class AnnouncementDetailPage implements OnInit,OnDestroy {
   announcement:Announcement;
   annoucementDetailSub:Subscription;
   isLoading:boolean = false;
+  announcementAuthor:UserProfile
   constructor(
     private newsService:NewsService,
     private route:ActivatedRoute,
     private router:Router,
     private navCtrl:NavController,
-    private alertCtrl:AlertController,
-    private authService:AuthService) { }
+    private alertCtrl:AlertController) { }
 
   ngOnInit() {
     this.annoucementDetailSub = this.route.paramMap.subscribe(
@@ -49,8 +51,8 @@ export class AnnouncementDetailPage implements OnInit,OnDestroy {
             announcement.numberofVisualisations,
             announcement.announcementPictureUrl,
             announcement.messages);
+            this.getAuthor();
             this.isLoading = false;
-            console.log(this.announcement);
           },error=>{
             this.alertCtrl.create({
               header:'An error occured',
@@ -72,4 +74,13 @@ export class AnnouncementDetailPage implements OnInit,OnDestroy {
     }
   }
 
+  getAuthor(){
+    this.newsService.getAnnouncementAuthorById(this.announcement.userId).subscribe(author=>this.announcementAuthor=author);
+  }
+  onSendMessage(email:string){
+
+  }
+  onSeeProfile(email:string){
+
+  }
 }

@@ -24,9 +24,9 @@
     <ion-spinner color="primary" class="ion-text-center"></ion-spinner>
   </div>
   <form [formGroup]="form" class="ion-text-center ion-padding" *ngIf="!isLoading">
-    <ion-avatar class="avatar">
+    <ion-thumbnail class="avatar">
       <ion-img [src]="announcementtoBeEdited.announcementPictureUrl"></ion-img>
-    </ion-avatar>
+    </ion-thumbnail>
     <ion-grid>
       <ion-row>
         <ion-col size-sm="6" offset-sm="3">
@@ -85,7 +85,7 @@
               ></ion-input>
             </ion-item>
           </ion-col>
-          <ion-col size-sm="3" offset-sm="3">
+          <ion-col size-sm="3">
             <ion-item>
               <ion-label position="floating">Street</ion-label>
               <ion-input
@@ -104,11 +104,20 @@
         <ion-row>
           <ion-col size-sm="6" offset-sm="3">
             <ion-item>
-              <ion-label position="floating">Choose Category</ion-label>
-              <ion-input
-               type="text"
-               formControlName="category"
-              ></ion-input>
+              <ion-label position="floating">Choose a category</ion-label>
+              <ion-select [value]="announcementtoBeEdited.category" formControlName="category">
+                <ion-select-option value="auto/moto/ambarcatiuni">Auto,moto,ambarcatiuni</ion-select-option>
+                <ion-select-option value="imobiliare">Imobiliare</ion-select-option>
+                <ion-select-option value="job">Job-uri</ion-select-option>
+                <ion-select-option value="electrice">Electrice</ion-select-option>
+                <ion-select-option value="casa/gradina">Casa,gradina</ion-select-option>
+                <ion-select-option value="moda/frumete">Moda,frumusete</ion-select-option>
+                <ion-select-option value="mama/copii">Mama si copilul</ion-select-option>
+                <ion-select-option value="sport/timpliber/arta">Sport,timp liber,arta</ion-select-option>
+                <ion-select-option value="servicii/afaceri">Servicii,afaceri</ion-select-option>
+                <ion-select-option value="agro/industrie">Agro,Industrie</ion-select-option>
+                <ion-select-option value="animale">Animale</ion-select-option>
+              </ion-select>
             </ion-item>
           </ion-col>
         </ion-row>

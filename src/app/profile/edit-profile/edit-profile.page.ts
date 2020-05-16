@@ -36,24 +36,34 @@ export class EditProfilePage implements OnInit {
           userDetails.email,
           userDetails.firstname,
           userDetails.lastname,
+          userDetails.profession,
+          userDetails.where,
           userDetails.imageUrl,
           userDetails.description);
         this.form = new FormGroup({
           profilePhoto:new FormControl(this.userToEdit.imageUrl,{
             updateOn:'change',
-           // validators:[Validators.required]
+           //validators:[Validators.required]
           }),
-          firstname: new FormControl(this.userToEdit.firstname,{
+          firstname: new FormControl(this.userToEdit.firstname ? this.userToEdit.firstname: '',{
             updateOn:'change',
-            //validators:[Validators.required]
+            validators:[Validators.required]
           }),
-          lastname:new FormControl(this.userToEdit.lastname,{
+          lastname:new FormControl(this.userToEdit.lastname ? this.userToEdit.lastname: '',{
             updateOn:'change',
-           // validators:[Validators.required]
+           validators:[Validators.required]
           }),
           description: new FormControl(this.userToEdit.description ? this.userToEdit.description: '',{
             updateOn:'change',
             //validators:[Validators.required]
+          }),
+          profession: new FormControl(this.userToEdit.profession ? this.userToEdit.profession: '',{
+            updateOn:'change',
+            validators:[Validators.required]
+          }),
+          where:new FormControl(this.userToEdit.where ? this.userToEdit.where: '',{
+            updateOn:'change',
+            validators:[Validators.required]
           }),
         });
         this.isLoading = false;
@@ -71,12 +81,7 @@ export class EditProfilePage implements OnInit {
   }
   onFileChange(event) {
     var file = event.target.files[0];
-    // console.log(file);
-    //   this.profileService.uploadImage(file).subscribe();
-    //   this.profileService.url.subscribe(url=>{url=url})
-    // console.log(url);
     this.uploadPicture(file);
-      
   }
   async uploadPicture(imageUri){
     const storageRef = this.astorage.storage.ref(`usersProfile/${imageUri.name}`);
@@ -103,6 +108,8 @@ export class EditProfilePage implements OnInit {
         this.form.value.lastname,
         this.form.value.description,
         this.form.value.profilePhoto,
+        this.form.value.profession,
+        this.form.value.where
       ).subscribe(()=>{
         loadingEl.dismiss();
         this.form.reset();

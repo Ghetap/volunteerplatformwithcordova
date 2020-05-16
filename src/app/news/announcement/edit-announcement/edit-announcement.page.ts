@@ -56,6 +56,7 @@ export class EditAnnouncementPage implements OnInit {
           announcement.announcementPictureUrl,
           announcement.messages);
 
+          console.log(this.announcementtoBeEdited);
         this.form = new FormGroup({
           title:new FormControl(this.announcementtoBeEdited.title,{
             updateOn:'change',
@@ -67,7 +68,7 @@ export class EditAnnouncementPage implements OnInit {
           }),
           price:new FormControl(this.announcementtoBeEdited.price,{
             updateOn:'change',
-            validators:[Validators.required,Validators.min(1)]
+            //validators:[Validators.min(1)]
           }),
           phone: new FormControl(this.announcementtoBeEdited.phone,{
             updateOn:'change',
@@ -79,7 +80,7 @@ export class EditAnnouncementPage implements OnInit {
           }),
           street:new FormControl(this.announcementtoBeEdited.street,{
             updateOn:'change',
-            validators:[Validators.required,Validators.min(1)]
+            //validators:[Validators.min(1)]
           }),
           category:new FormControl(this.announcementtoBeEdited.category,{
             updateOn:'change',
@@ -87,13 +88,13 @@ export class EditAnnouncementPage implements OnInit {
           }),
           announcementPicture:new FormControl(this.announcementtoBeEdited.announcementPictureUrl,{
             updateOn:'change',
-            validators:[Validators.required]
+            //validators:[Validators.required]
           }),
-          startDate: new FormControl(this.announcementtoBeEdited.startDate,{
+          startDate: new FormControl(this.announcementtoBeEdited.startDate.toISOString(),{
             updateOn:'change',
             validators:[Validators.required]
           }),
-          endDate: new FormControl(this.announcementtoBeEdited.endDate,{
+          endDate: new FormControl(this.announcementtoBeEdited.endDate.toISOString(),{
             updateOn:'change',
             validators:[Validators.required]
           }),
@@ -125,14 +126,14 @@ export class EditAnnouncementPage implements OnInit {
     }).then(loadingEl=>{
       loadingEl.present();
       this.newsService.updateAnnouncement(
-        this.announcementtoBeEdited.id, 
+        this.announcementId, 
         this.form.value.title, 
         this.form.value.description, 
         +this.form.value.price, 
         this.form.value.phone,
-        this.form.value.announcementPictureUrl,
-        this.form.value.startDate,
-        this.form.value.endDate,
+        this.form.value.announcementPicture,
+        new Date(this.form.value.startDate),
+        new Date(this.form.value.endDate),
         this.form.value.category,
         this.form.value.city,
         this.form.value.street

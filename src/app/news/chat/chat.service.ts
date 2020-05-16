@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, of, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, } from 'rxjs';
 import { UserProfile } from 'src/app/profile/userProfile.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map, tap, take, switchMap } from 'rxjs/operators';
@@ -19,7 +19,7 @@ interface Item{
 @Injectable({
   providedIn: 'root'
 })
-export class CommunityService {
+export class ChatService {
 
   private _communityUsers = new BehaviorSubject<UserProfile[]>([]);
   private _messages = new BehaviorSubject<Message[]>([]);

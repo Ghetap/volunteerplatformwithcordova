@@ -53,6 +53,7 @@ export class MyannouncementPage implements OnInit,OnDestroy {
       message:'Deleting...'
     }).then(loadingEl=>{
       loadingEl.present();
+      console.log(Id);
       this.newsService.deleteAnouncementById(Id).subscribe(()=>{
         loadingEl.dismiss();
         this.router.navigate(['/news/tabs/announcement']);

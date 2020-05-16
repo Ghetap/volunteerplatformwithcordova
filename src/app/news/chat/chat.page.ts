@@ -2,9 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { NavController } from '@ionic/angular';
 import { ActivatedRoute,  } from '@angular/router';
-import { CommunityService } from '../community.service';
+import { ChatService } from './chat.service';
 import { Subscription, Observable } from 'rxjs';
-import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-chat',
@@ -24,7 +23,7 @@ export class ChatPage implements OnInit,OnDestroy{
     public firestore:AngularFirestore,
     private navCtrl:NavController,
     private route:ActivatedRoute,
-    private communityService:CommunityService
+    private chatService:ChatService
   ) {
   } 
 
@@ -44,7 +43,7 @@ export class ChatPage implements OnInit,OnDestroy{
           this.receiverEmail = paramMap.get('receiverEmail');
           this.senderEmail = paramMap.get('senderEmail');
         }
-        this.chat$ = this.communityService.getChat(this.receiverEmail,this.senderEmail);
+        this.chat$ = this.chatService.getChat(this.receiverEmail,this.senderEmail);
       }
     )
       //folosim acelasi chat de comunicare
@@ -55,7 +54,7 @@ export class ChatPage implements OnInit,OnDestroy{
         docId = this.senderEmail+'+'+this.receiverEmail;
     }
     else
-      this.communityService.sendMessage(docId,this.message,this.senderEmail);
+      this.chatService.sendMessage(docId,this.message,this.senderEmail);
     this.message="";
   }
   trackByCreated(i,msg){

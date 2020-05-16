@@ -4,6 +4,7 @@ import { BehaviorSubject, of} from 'rxjs';
 import { Announcement } from './announcement/announcement.model';
 import { take, switchMap, map, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { UserProfile } from '../profile/userProfile.model';
 
 @Injectable({
   providedIn: 'root'
@@ -74,6 +75,7 @@ export class NewsService {
             console.log(docId);
             return this.firestore.doc(`announcements/${docId}`)
             .set({
+              id:docId,
               title:data.title,
               description:data.description,
               price:data.price,
@@ -85,7 +87,7 @@ export class NewsService {
               city:data.city,
               street:data.street,
               category:data.category,
-              numberofVisualisations:data.category,
+              numberOfVisualisations:data.numberOfVisualisations,
               messages:data.messages
             })
           }
@@ -106,7 +108,7 @@ export class NewsService {
         const announcemetDoc = doc.data();
         announcements.push(
           new Announcement(
-            announcemetDoc.id,
+            doc.id,
             announcemetDoc.title,
             announcemetDoc.description,
             announcemetDoc.price,
@@ -169,7 +171,7 @@ export class NewsService {
         const announcemetDoc = doc.data();
         announcements.push(
           new Announcement(
-            announcemetDoc.id,
+            doc.id,
             announcemetDoc.title,
             announcemetDoc.description,
             announcemetDoc.price,
@@ -208,6 +210,7 @@ export class NewsService {
         return this.myannouncements.pipe(
           take(1),
           switchMap( announcements=>{
+            console.log(announcements);
             const toUpdateAnnouncementIndex = announcements.findIndex(an=>an.id===id);
             upadetNews = [...announcements];
             const oldAnnouncement = upadetNews[toUpdateAnnouncementIndex];
@@ -237,8 +240,13 @@ export class NewsService {
               title:title,
               description:description,
               price:money,
+              dateFrom:newStartDate,
+              dateTo:newEndDate,
               phone:phone,
-              location:location
+              city:city,
+              street:street,
+              category:category,
+              announcementPictureUrl
             })
           }
         }),
@@ -247,5 +255,21 @@ export class NewsService {
           this._annoucements.next(upadetNews);
         })
     )
+  }
+
+  getAnnouncementAuthorById(authorId:string){
+    return this.firestore.doc(`users/${authorId}`).get()
+    .pipe( 
+      map(userdoc=>{
+          const id  = userdoc.id;
+          const email = userdoc.data().email;
+          const firstname = userdoc.data().firstname;
+          const lastname = userdoc.data().lastname;
+          const profession = userdoc.data().profession;
+          const where = userdoc.data().where;
+          const imageUrl = userdoc.data().imageUrl;
+          const description = userdoc.data().description;
+        return new UserProfile(id,email,firstname,lastname,profession,where,imageUrl,description)
+    }))
   }
 }

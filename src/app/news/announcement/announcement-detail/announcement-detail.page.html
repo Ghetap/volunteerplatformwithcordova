@@ -18,7 +18,7 @@
 
  <ion-grid *ngIf="!isLoading">
    <ion-row>
-     <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
+     <ion-col size-sm="6" offset-sm="3" class="ion-text-center">
       <ion-card color="light">
         <ion-card-header>
           <ion-card-title>{{ announcement.title }}</ion-card-title>
@@ -85,13 +85,30 @@
             {{ announcement.phone }}
           </ion-text>
         </ion-label>
-        <ion-chip slot="end">
-          <ion-icon name="eye-sharp" color="secondary"></ion-icon>
-          <ion-label> {{ announcement.numberOfVisualisations }}</ion-label>
-        </ion-chip>
+        <hr>
+        <ion-label >
+          <ion-icon name="eye-sharp" color="secondary" class="ion-space-left"></ion-icon>
+          <span class="ion-space-left" > Number of Views: </span>
+          <ion-text> {{ announcement.numberOfVisualisations }}</ion-text>
+        </ion-label>
+
+        <ion-list>
+          <ion-item-sliding>
+           <app-sliding-item [user]="announcementAuthor"></app-sliding-item>
+           <ion-item-options>
+             <ion-item-option color="primary" (click)="onSendMessage(announcementAuthor.email)">
+              <ion-icon name="chatbubble-sharp" slot="top"></ion-icon>
+                Send message
+             </ion-item-option>
+             <ion-item-option color="secondary" (click)="onSeeProfile(announcementAuthor.email)">
+              <ion-icon name="person-circle-sharp" slot="top"></ion-icon>
+                See profile
+             </ion-item-option>
+           </ion-item-options>
+         </ion-item-sliding>
+        </ion-list>
       </ion-card>
      </ion-col>
    </ion-row>
  </ion-grid>
-  
 </ion-content>

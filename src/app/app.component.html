@@ -14,33 +14,27 @@
     <ion-content>
       <ion-list>
         <ion-menu-toggle>
-          <ion-item lines="none" routerLink="">
-            <ion-icon name="star-sharp" slot="start" color="secondary"></ion-icon>
-            <ion-label >Your Reviews</ion-label>
-          </ion-item>
-        </ion-menu-toggle>
-        <ion-menu-toggle>
           <ion-item lines="none" routerLink="/profile">
             <ion-icon name="person" slot="start" color="secondary"></ion-icon>
               <ion-label > Profile</ion-label>
           </ion-item>
         </ion-menu-toggle>
         <ion-menu-toggle>
-          <ion-item lines="none" (click)="onLogout()" button>
-            <ion-icon name="exit" slot="start" color="secondary"></ion-icon>
-            <ion-label >Logout</ion-label>
-          </ion-item>
-        </ion-menu-toggle>
-        <ion-menu-toggle>
           <ion-item lines="none" (click)="subscribeToNotifications()" button>
             <ion-icon name="notifications-circle-sharp" slot="start" color="secondary"></ion-icon>
-            <ion-label>Subscribe to Notifications</ion-label>
+            <ion-label>Subscribe</ion-label>
           </ion-item>
         </ion-menu-toggle>
         <ion-menu-toggle>
           <ion-item lines="none" (click)="unsubscribeFromNotifications()" button>
             <ion-icon name="notifications-off-circle-sharp" slot="start" color="secondary" ></ion-icon>
             <ion-label >Unsubscribe</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle>
+          <ion-item lines="none" (click)="onLogout()" button>
+            <ion-icon name="exit" slot="start" color="secondary"></ion-icon>
+            <ion-label >Logout</ion-label>
           </ion-item>
         </ion-menu-toggle>
       </ion-list>

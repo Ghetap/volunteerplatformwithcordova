@@ -17,6 +17,7 @@ export class AnnouncementPage implements OnInit, OnDestroy {
   listLoadedAnnouncements:Announcement[];
   filteredAnnouncements:Announcement[];
 
+  height = Math.floor(Math.random() * 50 + 150);
   private announcementSub:Subscription;
   isLoading = false;
   constructor(private newsService:NewsService,
