@@ -15,11 +15,12 @@ import { FcmService } from 'src/app/shared/fcm.service';
 export class AnnouncementPage implements OnInit, OnDestroy {
 
   listLoadedAnnouncements:Announcement[];
-  filteredAnnouncements:Announcement[];
+  copyAnnouncements:Announcement[];
 
-  height = Math.floor(Math.random() * 50 + 150);
   private announcementSub:Subscription;
   isLoading = false;
+  isSearchbarOpened=false;
+  isFilterOpened=false;
   constructor(private newsService:NewsService,
     private menuCtrl:MenuController,
     private authService:AuthService,
@@ -31,7 +32,7 @@ export class AnnouncementPage implements OnInit, OnDestroy {
     this.announcementSub = this.newsService
     .announcements.subscribe(annoucements=>{
       this.listLoadedAnnouncements = annoucements;
-      this.filteredAnnouncements = annoucements;
+      this.copyAnnouncements = annoucements;
     })
   }
   ionViewWillEnter(){
@@ -51,12 +52,40 @@ export class AnnouncementPage implements OnInit, OnDestroy {
     this.menuCtrl.toggle();
   }
 
+  searchAfterInput(event:any){
+    const input = event.target.value;
+    const filteredList = [];
+    this.copyAnnouncements.map((item)=>{
+      if(item['city'].toUpperCase().includes(input.toUpperCase()) 
+      || item['title'].toUpperCase().includes(input.toUpperCase())){
+        filteredList.push(item);
+      }
+    })
+    if(filteredList.length > 0)
+     this.listLoadedAnnouncements = filteredList;
+  }
+  segmentChanged(event:any){
+    const input = event.target.value;
+    const filtereList = [];
+    if(input ==='all')
+    {
+       this.listLoadedAnnouncements = this.copyAnnouncements;
+    } else{
+      this.copyAnnouncements.map((item)=>{
+      if(item['category'] === input){
+        filtereList.push(item);
+      }
+    })
+    this.listLoadedAnnouncements = filtereList;
+    }
+    
+  }
   onFilterUpdate(event:CustomEvent){
     this.authService.userId.pipe(take(1)).subscribe(userId=>{
       if(event.detail.value === 'all'){
-        this.filteredAnnouncements = this.listLoadedAnnouncements;
+        this.copyAnnouncements = this.listLoadedAnnouncements;
       }else{
-        this.filteredAnnouncements = this.listLoadedAnnouncements
+        this.copyAnnouncements = this.listLoadedAnnouncements
         .filter(announcement=>announcement.userId !== userId);
       }
     })

@@ -272,4 +272,47 @@ export class NewsService {
         return new UserProfile(id,email,firstname,lastname,profession,where,imageUrl,description)
     }))
   }
+  incrementNumberofViews(announcementId:string,number:number){
+    let upadetNews = [];
+    console.log("increment")
+    return this.announcements.pipe(
+      take(1),
+      switchMap( announcements=>{
+        console.log(announcements);
+        const toUpdateAnnouncementIndex = announcements.findIndex(an=>an.id===announcementId);
+        upadetNews = [...announcements];
+        const oldAnnouncement = upadetNews[toUpdateAnnouncementIndex];
+        console.log(oldAnnouncement);
+        upadetNews[toUpdateAnnouncementIndex] = new Announcement(
+          oldAnnouncement.id,
+          oldAnnouncement.title,
+          oldAnnouncement.description,
+          oldAnnouncement.money,
+          oldAnnouncement.newStartDate,
+          oldAnnouncement.newEndDate,
+          oldAnnouncement.userId,
+          oldAnnouncement.phone,
+          oldAnnouncement.city,
+          oldAnnouncement.street,
+          oldAnnouncement.category,
+          number,
+          oldAnnouncement.announcementPictureUrl,
+          oldAnnouncement.messages);
+          console.log(toUpdateAnnouncementIndex);
+          console.log(upadetNews);
+          return of(upadetNews);
+    }),
+    take(1),
+    switchMap(()=>{
+      console.log(announcementId);
+        return this.firestore.doc(`announcements/${announcementId}`).update({
+          numberOfVisualisations:number
+        })
+      }
+    ),
+    tap(()=> {
+      this._annoucements.next(upadetNews);
+    })
+    )    
+  }
 }

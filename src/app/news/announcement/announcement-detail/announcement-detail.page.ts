@@ -48,9 +48,11 @@ export class AnnouncementDetailPage implements OnInit,OnDestroy {
             announcement.city,
             announcement.street,
             announcement.category,
-            announcement.numberofVisualisations,
+            announcement.numberOfVisualisations,
             announcement.announcementPictureUrl,
             announcement.messages);
+            console.log(announcement)
+            this.newsService.incrementNumberofViews(this.announcement.id,this.announcement.numberOfVisualisations+1).subscribe();
             this.getAuthor();
             this.isLoading = false;
           },error=>{
