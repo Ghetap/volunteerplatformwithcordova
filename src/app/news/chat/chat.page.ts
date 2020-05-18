@@ -12,7 +12,7 @@ import { Subscription, Observable } from 'rxjs';
 })
 export class ChatPage implements OnInit,OnDestroy{
 
-  bool;
+  chatId;
   receiverEmail;
   senderEmail;
   message;
@@ -30,31 +30,21 @@ export class ChatPage implements OnInit,OnDestroy{
   ngOnInit() {
     this.route.paramMap.subscribe(
       paramMap=>{
-        if(!paramMap.has('receiverEmail') || !paramMap.has('senderEmail') || !paramMap.has('bool')){
+        if(!paramMap.has('chatId') || !paramMap.has('emailSender') || !paramMap.has('emailReceiver')){
             this.navCtrl.navigateBack('/news/tabs/announcement');
             return;
         }
-        this.bool = paramMap.get('bool')
-        console.log(this.bool);
-        if(this.bool === true){
-          this.receiverEmail = paramMap.get('senderEmail');
-          this.senderEmail = paramMap.get('receiverEmail');
-        }else{
-          this.receiverEmail = paramMap.get('receiverEmail');
-          this.senderEmail = paramMap.get('senderEmail');
-        }
-        this.chat$ = this.chatService.getChat(this.receiverEmail,this.senderEmail);
+        this.chatId = paramMap.get('chatId');
+        console.log(this.chatId);
+        this.receiverEmail = paramMap.get('emailReceiver');
+        console.log(this.receiverEmail);
+        this.senderEmail = paramMap.get('emailSender')
+        this.chat$ = this.chatService.getChat(this.chatId);
       }
     )
-      //folosim acelasi chat de comunicare
   }
   sendMessage(){
-    let docId = this.receiverEmail+'+'+this.senderEmail;
-    if(this.bool === true){
-        docId = this.senderEmail+'+'+this.receiverEmail;
-    }
-    else
-      this.chatService.sendMessage(docId,this.message,this.senderEmail);
+   this.chatService.sendMessage(this.chatId,this.message,this.senderEmail,this.receiverEmail);
     this.message="";
   }
   trackByCreated(i,msg){

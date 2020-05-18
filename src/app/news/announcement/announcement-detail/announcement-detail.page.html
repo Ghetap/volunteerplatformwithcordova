@@ -93,10 +93,10 @@
         </ion-label>
 
         <ion-list>
-          <ion-item-sliding>
+          <ion-item-sliding #slidingAuthor>
            <app-sliding-item [user]="announcementAuthor"></app-sliding-item>
            <ion-item-options>
-             <ion-item-option color="primary" (click)="onSendMessage(announcementAuthor.email)">
+             <ion-item-option color="primary" (click)="onSendMessage(announcementAuthor.email,slidingAuthor)">
               <ion-icon name="chatbubble-sharp" slot="top"></ion-icon>
                 Send message
              </ion-item-option>

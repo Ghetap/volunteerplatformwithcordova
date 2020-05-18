@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NewsService } from '../../news.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavController, AlertController, IonItemSliding } from '@ionic/angular';
+import { NavController, AlertController, IonItemSliding, LoadingController } from '@ionic/angular';
 import { Announcement } from '../announcement.model';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Subscription } from 'rxjs';
 import { UserProfile } from 'src/app/profile/userProfile.model';
 import { ProfileService } from 'src/app/profile/profile.service';
+import { ChatService } from '../../chat/chat.service';
 
 @Component({
   selector: 'app-announcement-detail',
@@ -16,6 +17,7 @@ import { ProfileService } from 'src/app/profile/profile.service';
 export class AnnouncementDetailPage implements OnInit,OnDestroy {
 
   announcement:Announcement;
+  announcementId;
   annoucementDetailSub:Subscription;
   isLoading:boolean = false;
   announcementAuthor:UserProfile
@@ -24,6 +26,8 @@ export class AnnouncementDetailPage implements OnInit,OnDestroy {
     private route:ActivatedRoute,
     private router:Router,
     private navCtrl:NavController,
+    private loadingCtrl:LoadingController,
+    private chatService:ChatService,
     private alertCtrl:AlertController) { }
 
   ngOnInit() {
@@ -33,6 +37,7 @@ export class AnnouncementDetailPage implements OnInit,OnDestroy {
             this.navCtrl.navigateBack('/news/tabs/announcement');
             return;
         }
+        this.announcementId = paramMap.get('announcementId');
         this.isLoading = true;
         return this.newsService.getDetailedAnnoucementById(paramMap.get('announcementId'))  
         .subscribe(announcement=>{
@@ -79,10 +84,17 @@ export class AnnouncementDetailPage implements OnInit,OnDestroy {
   getAuthor(){
     this.newsService.getAnnouncementAuthorById(this.announcement.userId).subscribe(author=>this.announcementAuthor=author);
   }
-  onSendMessage(email:string){
-
-  }
-  onSeeProfile(email:string){
-
+  onSendMessage(receiverEmail:string,slidingAuthor:IonItemSliding){
+    slidingAuthor.close();
+ 
+      let senderEmail;
+      this.chatService.getSenderEmail().subscribe(email=>{
+          senderEmail=email
+        this.chatService.chatExists(this.announcement.id).subscribe(snapshot=>{
+            if(!snapshot.exists)
+              this.chatService.create(this.announcement.id);
+            this.router.navigate(['/','news','tabs','chat',this.announcementId,senderEmail,receiverEmail]);
+          })
+      });
   }
 }

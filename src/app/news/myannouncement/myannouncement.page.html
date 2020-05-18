@@ -14,15 +14,9 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  <ion-grid>
+  <ion-grid *ngIf="!isLoading">
     <ion-row>
-      <ion-col class="ion-text-center" size-md="6" offset-md="3" *ngIf="isLoading">
-      <ion-spinner></ion-spinner>
-    </ion-col>
       <ion-col size="12" size-sm="8" offset-sm="2">
-        <div *ngIf="isLoading" class="ion-text-center">
-          <ion-spinner color="primary" ></ion-spinner>
-        </div>
         <div *ngIf="!isLoading && myNews.length <= 0" class="ion-text-center">
           <p>No announcements found! Please create one first!</p>
           <ion-button color="primary" routerLink="/news/tabs/announcement/new">Create Announcement</ion-button>

@@ -1,7 +1,8 @@
 export class Message{
     constructor(
         public text:string,
-        public email:string,
+        public senderEmail:string,
+        public receiverEmail:string,
         public createdAt:Date
     ){};
 }

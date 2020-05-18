@@ -7,12 +7,12 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { firestore } from 'firebase';
 
 interface Message{
-  email:string,
+  senderEmail,
+  receiverEmail,
   text:string,
   date:Date
 }
 interface Item{
-  email:string,
   date:Date,
   messages:Message[]
 }
@@ -21,11 +21,8 @@ interface Item{
 })
 export class ChatService {
 
-  private _communityUsers = new BehaviorSubject<UserProfile[]>([]);
   private _messages = new BehaviorSubject<Message[]>([]);
-  get communityUsers(){
-    return this.communityUsers.asObservable();
-  }
+  
   get messages(){
     return this._messages.asObservable();
   }
@@ -46,64 +43,34 @@ export class ChatService {
       })
     )
   }
-  fetchUsers (){
-    return this.firestore.collection('users').get()
-    .pipe(map(resData=>{
-      const users = [];
-      resData.docs.map(doc=>{
-        const usersDoc = doc.data();
-        const userId = doc.id;
-        users.push(
-          new UserProfile(
-            userId,
-            usersDoc.email,
-            usersDoc.firstname,
-            usersDoc.lastname,
-            usersDoc.imageUrl,
-            usersDoc.description
-          )
-        )
-      })
-      return users;
-    }),
-    tap(users=>{
-      this._communityUsers.next(users)
-    })
-    );
-  }
-
-  getChat(email1:string,email2:string){
+ 
+  getChat(docId:string){
     return this.firestore.collection<any>('chats')
-    .doc(email1+'+'+email2)
+    .doc(docId)
     .snapshotChanges()
     .pipe(map(doc=>{
       return {id: doc.payload.id, ...doc.payload.data() as Item}
     }))
   }
 
-  chatExists(email1:string,email2:string){
-    return this.firestore.collection<any>('chats').doc(email1+'+'+email2).get()
+  chatExists(docId:string){
+    return this.firestore.collection<any>('chats').doc(docId).get()
   }
-  async create(receiverEmail:string,senderEmail:string){
+  create(docId:string){
     console.log("am intrat in create document");
     const data = {
-      senderEmail,
-      receiverEmail,
       date:Date.now(),
       messages:[]
     }
-    let docId
-    const docRef = await this.firestore.collection(`chats/${receiverEmail+'+'+senderEmail}`).add(data);
-    return docRef.get()
+    return this.firestore.collection('chats').doc(docId).set(data);
   }
-  sendMessage(docId:string, text:string,email:string){
-    console.log(docId)
+  sendMessage(docId:string, text:string,senderEmail:string,receiverEmail:string){
     const data = {
-      email,
+      senderEmail,
+      receiverEmail,
       text,
       date:Date.now(),
     }
-    console.log(email);
     const ref = this.firestore.collection('chats').doc(docId);
     return ref.update({
       messages : firestore.FieldValue.arrayUnion(data)

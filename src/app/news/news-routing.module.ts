@@ -29,6 +29,14 @@ const routes: Routes = [
         ]
       },
       {
+        path:'',children:[
+          {
+            path:'chat/:chatId/:emailSender/:emailReceiver',
+            loadChildren: ()=> import('./chat/chat.module').then(m => m.ChatPageModule)
+           },
+        ]
+      },
+      {
         path: 'notifications',children:[
           {
             path:'',

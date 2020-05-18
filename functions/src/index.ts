@@ -12,7 +12,7 @@ const db =admin.firestore();
 const settings = {timestampsInSnapshots:true};
 db.settings(settings);
 
-export const archiveChat = functions.firestore.document('chat/{chatId}')
+export const archiveChat = functions.firestore.document('chats/{chatId}')
 .onUpdate(change=>{
     const data = change.after.data();
     const maxLen = 50;
@@ -26,7 +26,7 @@ export const archiveChat = functions.firestore.document('chat/{chatId}')
         const batch = db.batch();
         if(data)
             data.messages.splice(0,msgLen-maxLen);
-        const ref = db.collection('chat').doc(change.after.id);
+        const ref = db.collection('chats').doc(change.after.id);
         batch.set(ref,data,{merge:true})
         return batch.commit();
     }else{

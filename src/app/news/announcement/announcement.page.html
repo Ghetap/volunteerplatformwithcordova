@@ -21,9 +21,9 @@
   (ionCancel)="isSearchbarOpened=false"
   (ionInput)="searchAfterInput($event)"
   ></ion-searchbar>
-  <ion-segment  value="aparitie" scrollable (ionChange)="segmentChanged($event)" color="secondary">
-    <ion-segment-button value="aparitie">
-      <ion-label>Data aparitiei</ion-label>
+  <ion-segment  value="all" scrollable (ionChange)="segmentChanged($event)" color="primary">
+    <ion-segment-button value="all">
+      <ion-label>Toate</ion-label>
     </ion-segment-button>
     <ion-segment-button value="auto/moto/ambarcatiuni">
       <ion-label>Auto,moto,ambarcatiuni</ion-label>

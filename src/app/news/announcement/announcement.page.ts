@@ -69,11 +69,11 @@ export class AnnouncementPage implements OnInit, OnDestroy {
   segmentChanged(event:any){
     const input = event.target.value;
     const filtereList = [];
-    if(input ==='aparitie'){
+    if(input ==='all'){
       this.copyAnnouncements.sort((a,b)=>
       new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
       this.listLoadedAnnouncements = this.copyAnnouncements;
-    } 
+    }
     else{
       this.copyAnnouncements.map((item)=>{
         if(item['category'] === input){

@@ -10,6 +10,13 @@
     font-weight: bold;
     font-size: 80%;
 }
+.timestamp{
+   font-size: 80%;
+   font-weight: lighter;
+   position: relative;
+   top:0;
+   right:0;
+}
 .message{
     font-size: 120%;
 }
@@ -35,10 +42,6 @@ div#footer {
     flex-direction: row;
     align-items: stretch;
 }
-.toolbar{
-    margin:0;
-    padding: 0!important;
-}
 .messageLeft{
     float: left;
 }
@@ -55,4 +58,8 @@ div#footer {
 }
 .innerMessage.messageLeft{
     background: #3dc2ff;
+}
+ion-input{
+    padding-left: 10px;
+    font-size: 100%;
 }
