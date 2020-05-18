@@ -21,9 +21,9 @@
   (ionCancel)="isSearchbarOpened=false"
   (ionInput)="searchAfterInput($event)"
   ></ion-searchbar>
-  <ion-segment  value="all" scrollable (ionChange)="segmentChanged($event)" color="secondary">
-    <ion-segment-button value="all">
-      <ion-label>All Suggestions</ion-label>
+  <ion-segment  value="aparitie" scrollable (ionChange)="segmentChanged($event)" color="secondary">
+    <ion-segment-button value="aparitie">
+      <ion-label>Data aparitiei</ion-label>
     </ion-segment-button>
     <ion-segment-button value="auto/moto/ambarcatiuni">
       <ion-label>Auto,moto,ambarcatiuni</ion-label>
@@ -58,6 +58,7 @@
     <ion-segment-button value="animale">
       <ion-label>Animale</ion-label>
     </ion-segment-button>
+   
   </ion-segment>
 </ion-header>
 
@@ -94,6 +95,13 @@
               <ion-label>
                 <h2>{{ announcement.title }}</h2>
                 <h2>{{ announcement.city }}</h2>
+                  <ion-text>
+                    {{ announcement.startDate | date : 'dd/MM/yyyy'}}
+                  </ion-text>
+                  <span class="ion-space-left">-</span>
+                  <ion-text>
+                    {{ announcement.endDate | date : 'dd/MM/yyyy'}}
+                  </ion-text>
               </ion-label>
               <div>
                 <ion-button

@@ -31,6 +31,8 @@ export class AnnouncementPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.announcementSub = this.newsService
     .announcements.subscribe(annoucements=>{
+      annoucements.sort((a,b)=>
+      new Date(b.startDate).getTime() - new Date(a.startDate).getTime())
       this.listLoadedAnnouncements = annoucements;
       this.copyAnnouncements = annoucements;
     })
@@ -67,18 +69,19 @@ export class AnnouncementPage implements OnInit, OnDestroy {
   segmentChanged(event:any){
     const input = event.target.value;
     const filtereList = [];
-    if(input ==='all')
-    {
-       this.listLoadedAnnouncements = this.copyAnnouncements;
-    } else{
+    if(input ==='aparitie'){
+      this.copyAnnouncements.sort((a,b)=>
+      new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
+      this.listLoadedAnnouncements = this.copyAnnouncements;
+    } 
+    else{
       this.copyAnnouncements.map((item)=>{
-      if(item['category'] === input){
-        filtereList.push(item);
-      }
-    })
-    this.listLoadedAnnouncements = filtereList;
+        if(item['category'] === input){
+          filtereList.push(item);
+        }
+      })
+      this.listLoadedAnnouncements = filtereList;
     }
-    
   }
   onFilterUpdate(event:CustomEvent){
     this.authService.userId.pipe(take(1)).subscribe(userId=>{
