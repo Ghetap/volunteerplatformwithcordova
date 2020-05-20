@@ -44,8 +44,8 @@ export const sendFcm = functions.firestore.document('chats/{chatId}').onWrite(
         let body;
         console.log(after);
         if(after){
-            receiverEmail = after.messages['receiverEmail'];
-            body = after.messages['text'];
+            receiverEmail = after.messages[after.messages.length - 1]['receiverEmail'];
+            body = after.messages[after.messages.length - 1]['text'];
         }    
         console.log(receiverEmail);
         console.log(body);
@@ -55,9 +55,14 @@ export const sendFcm = functions.firestore.document('chats/{chatId}').onWrite(
                 body:body
             }
         }
-        const devices = await db.doc(`devices/${receiverEmail}`).get();
-        const token = devices.data()?.token;
-        return admin.messaging().sendToDevice(token,payload);
+        const devicesRef = db.collection('devices').where('emai','==',receiverEmail);
+        const devices = await devicesRef.get();
+        const tokens: string | any[] = [];
+        devices.forEach(result=>{
+            const token = result.data().token;
+            tokens.push( token )
+        })
+        return admin.messaging().sendToDevice(tokens,payload);
     }
 )
 

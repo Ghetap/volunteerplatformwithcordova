@@ -14,13 +14,15 @@ export class NewsPage implements OnInit {
     public fcmService:FcmService,
     public toastCtrl:ToastController) { }
 
-  ngOnInit() {
+  ionViewDidLoad(){
     this.fcmService.getToken();
     this.fcmService.listenToNotifications().pipe(
       tap(msg=>{
           this.makeToast(msg.body);
       })
     );
+  }
+  ngOnInit() {
   }
   async makeToast(message){
     const toast = await this.toastCtrl.create({

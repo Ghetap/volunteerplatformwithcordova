@@ -31,8 +31,7 @@
     "cordova-android": "^8.1.0",
     "cordova-plugin-badge": "^0.8.8",
     "cordova-plugin-device": "^2.0.3",
-    "cordova-plugin-firebase": "^2.0.5",
-    "cordova-plugin-firebase-lib": "^5.1.1",
+    "cordova-plugin-firebase-lib": "^3.3.0",
     "cordova-sqlite-storage": "^5.0.0",
     "core-js": "^2.5.4",
     "firebase": "^7.14.3",
@@ -82,7 +81,7 @@
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-plugin-firebase": {}
+      "cordova-plugin-firebase-lib": {}
     },
     "platforms": [
       "android"

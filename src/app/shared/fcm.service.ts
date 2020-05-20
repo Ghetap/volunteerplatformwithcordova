@@ -19,7 +19,6 @@ export class FcmService implements OnDestroy{
     public firestore:AngularFirestore,
     private platform :Platform,
     private afMessaging:AngularFireMessaging,
-    private functions:AngularFireFunctions,
     private authService:AuthService,
     private toastController:ToastController) {
       this.afMessaging.messaging.subscribe(
@@ -53,13 +52,14 @@ export class FcmService implements OnDestroy{
         .get()
       }),
       take(1),
-      map((doc)=>{
+      switchMap((doc)=>{
         return doc.data().email;
       }),
-      tap(email=>{
-        this.firestore.doc(`devices/${email}`).set({
-          token:token,
-          email:email
+      map(email=>{
+        const devicesRef =  this.firestore.collection('decives');
+        return devicesRef.doc(token).set({
+          token,
+          email
         })
       })
     );
