@@ -7,8 +7,8 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
-admin.initializeApp()
-const db =admin.firestore();
+admin.initializeApp(functions.config().firebase)
+const db = admin.firestore();
 const settings = {timestampsInSnapshots:true};
 db.settings(settings);
 
@@ -16,7 +16,7 @@ export const archiveChat = functions.firestore.document('chats/{chatId}')
 .onUpdate(change=>{
     const data = change.after.data();
     const maxLen = 50;
-    var msgLen;
+    let msgLen;
     if(data)
         msgLen = data.messages.length;
     const charLen = JSON.stringify(data).length;
@@ -35,32 +35,29 @@ export const archiveChat = functions.firestore.document('chats/{chatId}')
 
 })
 
-export const subscribeToTopic = functions.https.onCall(
-    async (data,context)=>{
-        console.log(data);
-        await admin.messaging().subscribeToTopic(data.token,data.topic);
-        return `subscribed to ${data.topic}`;
-    }
-);
 
-export const unsubscribeFromTopic = functions.https.onCall(
-    async (data,context)=>{
-        await admin.messaging().unsubscribeFromTopic(data.token,data.topic);
-        return `unsubscribed from ${data.topic}`;
-    }
-);
 
-export const sendOnRegisterCreate = functions.firestore
-    .document('devices/{deviceId}')
-    .onWrite(async (event)=>{   
-        const token = event.after.get('token')
-        console.log(token);
-        const payload ={
-            notification :{
-                title:"Don't forget to edit your profile",
-                body: "Congratulations, if you already have..."
-            },
-            token:token
+export const sendFcm = functions.firestore.document('chats/{chatId}').onWrite(
+    async (event)=>{
+        const after = event.after.data();
+        let receiverEmail;
+        let body;
+        console.log(after);
+        if(after){
+            receiverEmail = after.messages['receiverEmail'];
+            body = after.messages['text'];
+        }    
+        console.log(receiverEmail);
+        console.log(body);
+        const payload = {
+            notification:{
+                title:'New message - ' + ' received: '+ Date.now(),
+                body:body
+            }
         }
-    return admin.messaging().send(payload);
-});
+        const devices = await db.doc(`devices/${receiverEmail}`).get();
+        const token = devices.data()?.token;
+        return admin.messaging().sendToDevice(token,payload);
+    }
+)
+

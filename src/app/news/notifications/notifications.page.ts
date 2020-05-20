@@ -9,17 +9,10 @@ import { FcmService } from 'src/app/shared/fcm.service';
 })
 export class NotificationsPage implements OnInit {
 
-  notifications;
-  seenNotifications:Notification[];
+  message;
   constructor(private fcmService:FcmService) { }
 
   ngOnInit() {
-
+    this.fcmService.currentMessage.subscribe(mess=>this.message = mess);
   }
-
-  ionViewWillEnter(){
-    //this.fcmService.receiveMessage();
-    this.notifications = this.fcmService.currentMessage;
-  }
-
 }

@@ -25,7 +25,6 @@ export class AnnouncementPage implements OnInit, OnDestroy {
     private menuCtrl:MenuController,
     private authService:AuthService,
     private fcmService:FcmService) { 
-      this.fcmService.receiveMessage();
     }
 
   ngOnInit() {

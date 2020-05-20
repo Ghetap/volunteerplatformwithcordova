@@ -6,7 +6,6 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './auth/auth.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ProfileService } from './profile/profile.service';
 import { UserProfile } from './profile/userProfile.model';
 import { FcmService } from './shared/fcm.service';
 
@@ -26,7 +25,6 @@ export class AppComponent implements OnInit,OnDestroy{
     private authService:AuthService,
     private router:Router,
     private fcmService:FcmService ) {
-    this.fcmService.requestPermission().subscribe();
     this.initializeApp();
   }
 
@@ -44,14 +42,13 @@ export class AppComponent implements OnInit,OnDestroy{
     this.authService.logout();
   }
 
-  subscribeToNotifications(){
-    this.fcmService.sub('notifications');
-    this.fcmService.receiveMessage();
-  }
-  unsubscribeFromNotifications(){
-      this.fcmService.unsub('notifications');
+  // subscribeToNotifications(){
+  //   this.fcmService.sub('notifications');
+  // }
+  // unsubscribeFromNotifications(){
+  //     this.fcmService.unsub('notifications');
    
-  }
+  // }
   ngOnInit(){
     this.authSub = this.authService.userIsAuthenticated.subscribe(isAuth=>{
         if(!isAuth && this.previousAuthState !== isAuth){

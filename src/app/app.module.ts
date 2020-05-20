@@ -19,7 +19,7 @@ import {AngularFireStorageModule} from '@angular/fire/storage'
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { AngularFireFunctionsModule} from '@angular/fire/functions';
 import { FcmService } from './shared/fcm.service';
-
+import { Firebase } from '@ionic-native/firebase/ngx';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -39,7 +39,8 @@ import { FcmService } from './shared/fcm.service';
     StatusBar,
     SplashScreen,
     AuthGuard,
-    FcmService,
+    Firebase,
+    FcmService
   ],
   bootstrap: [AppComponent]
 })
