@@ -9,8 +9,6 @@ import * as admin from 'firebase-admin';
 
 admin.initializeApp(functions.config().firebase)
 const db = admin.firestore();
-const settings = {timestampsInSnapshots:true};
-db.settings(settings);
 
 export const archiveChat = functions.firestore.document('chats/{chatId}')
 .onUpdate(change=>{
@@ -41,21 +39,24 @@ export const sendFcm = functions.firestore.document('chats/{chatId}').onWrite(
     async (event)=>{
         const after = event.after.data();
         let receiverEmail;
-        let body;
+        let senderEmail;
+        let text;
         console.log(after);
         if(after){
             receiverEmail = after.messages[after.messages.length - 1]['receiverEmail'];
-            body = after.messages[after.messages.length - 1]['text'];
+            senderEmail = after.messages[after.messages.length - 1]['senderEmail']
+            text = after.messages[after.messages.length - 1]['text'];
         }    
         console.log(receiverEmail);
-        console.log(body);
+        console.log(senderEmail);
+        console.log(text);
         const payload = {
             notification:{
-                title:'New message - ' + ' received: '+ Date.now(),
-                body:body
+                title:'New message from ' + senderEmail,
+                body: text
             }
         }
-        const devicesRef = db.collection('devices').where('emai','==',receiverEmail);
+        const devicesRef = db.collection('devices').where('email','==',receiverEmail);
         const devices = await devicesRef.get();
         const tokens: string | any[] = [];
         devices.forEach(result=>{

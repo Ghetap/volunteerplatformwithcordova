@@ -7,6 +7,7 @@ export class UserProfile {
       public profession:string,
       public where:string,
       public imageUrl?:string,
-      public description?:string
+      public description?:string,
+      public notifications?:string[]
     ) {}
 }

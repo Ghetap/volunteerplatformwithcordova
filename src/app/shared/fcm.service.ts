@@ -1,9 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { AngularFireMessaging } from '@angular/fire/messaging';
-import { AngularFireFunctions } from '@angular/fire/functions';
 import { ToastController } from '@ionic/angular';
-import { tap, take, switchMap, map } from 'rxjs/operators';
+import { take, switchMap, map, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { BehaviorSubject } from 'rxjs';
 import { Firebase } from '@ionic-native/firebase/ngx';
@@ -28,36 +27,42 @@ export class FcmService implements OnDestroy{
         })
     }
     
-
   async getToken(){
     let token;
-    if(this.platform.is('android')){
-      token = await this.firebaseNative.getToken();
+    if(this.platform.is('cordova'))
+    {
+      if(this.platform.is('android')){
+        token = await this.firebaseNative.getToken();
+      }
+      if(this.platform.is('ios')){
+        token = await this.firebaseNative.getToken();
+        await this.firebaseNative.grantPermission();
+      }
+      this.saveTokenToFirestore(token).subscribe();
+    }else if(!this.platform.is('cordova')){
+      this.afMessaging.requestToken.subscribe(token=>{
+        token=token;
+        this.saveTokenToFirestore(token).subscribe();
+      })    
     }
-    if(this.platform.is('ios')){
-      token = await this.firebaseNative.getToken();
-      await this.firebaseNative.grantPermission();
-    }
-    if(!this.platform.is('cordova')){
-      //TODO
-    }
-    return this.saveTokenToFirestore(token);
   }
   private saveTokenToFirestore(token){
-    if(!token) return;
+    console.log(token);
+    if(!token) 
+      return;
     return this.authService.userId.pipe(
       take(1),
       switchMap((userId)=>{
-        return this.firestore.doc(`users/${userId}`)
-        .get()
+        return this.firestore.doc(`users/${userId}`).get()
       }),
       take(1),
-      switchMap((doc)=>{
+      map((doc)=>{
         return doc.data().email;
       }),
-      map(email=>{
-        const devicesRef =  this.firestore.collection('decives');
-        return devicesRef.doc(token).set({
+      tap(email=>{
+        console.log(email);
+        const devicesRef =  this.firestore.collection('devices');
+        devicesRef.doc(token).set({
           token,
           email
         })
@@ -66,7 +71,7 @@ export class FcmService implements OnDestroy{
   }
 
   listenToNotifications(){
-    return this.firebaseNative.onNotificationOpen()
+    return this.firebaseNative.onNotificationOpen();
   }
   // async makeToast(message){
   //   const toast = await this.toastController.create({
@@ -77,24 +82,9 @@ export class FcmService implements OnDestroy{
   //   });
   //   toast.present();
   // }
-
-  // requestPermission() {
-  //  return this.afMessaging.requestToken.pipe(
-  //    tap(token=>{
-  //      this.token=token
-  //     })
-  //  )
-  // }
-
-  // receiveMessage() {
-  //   return this.afMessaging.messages.pipe(
-  //     take(1),
-  //     tap(payload=>{
-  //       console.log(payload);
-  //       this.currentMessage.next(payload);
-  //     })
-  //   )
-  // }
+  receiveMessage() {
+    return this.afMessaging.messages;
+  }
   // sub(topic){
   //   this.functions
   //   .httpsCallable('subscribeToTopic')({topic,token:this.token})

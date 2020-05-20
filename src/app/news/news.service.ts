@@ -5,6 +5,7 @@ import { Announcement } from './announcement/announcement.model';
 import { take, switchMap, map, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { UserProfile } from '../profile/userProfile.model';
+import { firestore } from 'firebase';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class NewsService {
 
   private _annoucements = new BehaviorSubject<Announcement[]>([]);  
   private _myannouncements = new BehaviorSubject<Announcement[]>([]);
+  private _notifications = new BehaviorSubject<string[]>([]);
   constructor(
     private authService:AuthService,
     private firestore:AngularFirestore) { 
@@ -26,6 +28,9 @@ export class NewsService {
     return this._myannouncements.asObservable();
   }
 
+  get notifications(){
+    return this._notifications.asObservable();
+  }
   addAnouncement(
     title:string,
     description:string,
@@ -49,7 +54,6 @@ export class NewsService {
           return userId;
         }),
         switchMap((userId)=>{
-          console.log(userId)
           newAnnouncement = new Announcement(
             docId,
             title,
@@ -70,9 +74,7 @@ export class NewsService {
         }),
         take(1),
         map((data) =>{
-          console.log(data);
           if(docId){
-            console.log(docId);
             return this.firestore.doc(`announcements/${docId}`)
             .set({
               id:docId,
@@ -158,7 +160,6 @@ export class NewsService {
       switchMap(()=>{return this._annoucements}),
       take(1),
       tap(list=>{
-        console.log(list);
         this._annoucements.next(list.filter(b=>{b.id !== announcementId}))
       })
     )
@@ -210,7 +211,6 @@ export class NewsService {
         return this.myannouncements.pipe(
           take(1),
           switchMap( announcements=>{
-            console.log(announcements);
             const toUpdateAnnouncementIndex = announcements.findIndex(an=>an.id===id);
             upadetNews = [...announcements];
             const oldAnnouncement = upadetNews[toUpdateAnnouncementIndex];
@@ -229,13 +229,10 @@ export class NewsService {
               oldAnnouncement.numberofVisualisations,
               announcementPictureUrl,
               oldAnnouncement.messages);
-              console.log(toUpdateAnnouncementIndex);
-              console.log(upadetNews);
               return of(upadetNews);
         }),
         switchMap(()=>{
           if(id){
-            console.log(id);
             return this.firestore.doc(`announcements/${id}`).update({
               title:title,
               description:description,
@@ -274,15 +271,12 @@ export class NewsService {
   }
   incrementNumberofViews(announcementId:string,number:number){
     let upadetNews = [];
-    console.log("increment")
     return this.announcements.pipe(
       take(1),
       switchMap( announcements=>{
-        console.log(announcements);
         const toUpdateAnnouncementIndex = announcements.findIndex(an=>an.id===announcementId);
         upadetNews = [...announcements];
         const oldAnnouncement = upadetNews[toUpdateAnnouncementIndex];
-        console.log(oldAnnouncement);
         upadetNews[toUpdateAnnouncementIndex] = new Announcement(
           oldAnnouncement.id,
           oldAnnouncement.title,
@@ -298,13 +292,10 @@ export class NewsService {
           number,
           oldAnnouncement.announcementPictureUrl,
           oldAnnouncement.messages);
-          console.log(toUpdateAnnouncementIndex);
-          console.log(upadetNews);
           return of(upadetNews);
     }),
     take(1),
     switchMap(()=>{
-      console.log(announcementId);
         return this.firestore.doc(`announcements/${announcementId}`).update({
           numberOfVisualisations:number
         })
@@ -314,5 +305,54 @@ export class NewsService {
       this._annoucements.next(upadetNews);
     })
     )    
+  }
+  
+  addNotificationToUser(text:string){
+    return this.authService.userId.pipe(
+      take(1),
+      map(userId=>{
+        if(!userId){
+          throw new Error('User not found!')
+        }
+        return userId
+      }),
+      map(userId=>{
+        const ref = this.firestore.collection('users').doc(userId);
+        return ref.update({
+          notifications : firestore.FieldValue.arrayUnion(text)
+        })
+      }),
+      switchMap(()=>{return this._notifications}),
+      take(1),
+      tap((notifications)=>{
+        this._notifications.next(notifications.concat(text));
+      })
+    )
+  }
+  
+  getUsersNotifications(){
+    return this.authService.userId.pipe(
+      take(1),
+      map(userId=>{
+        if(!userId){
+          throw new Error('User not found!')
+        }
+        return userId
+      }),
+      switchMap(userId=>{
+        return this.firestore.collection('users',ref=>ref.where('userId','==',userId)).get()
+      }),
+      take(1),
+      map(resData=>{
+        let notifications = [];
+        resData.docs.map(doc=>{
+          notifications = [...doc.data().notifications]
+        })
+        return notifications;
+      }),
+      tap(list=>{
+        this._notifications.next(list);
+      })
+    )
   }
 }

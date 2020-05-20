@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FcmService } from '../shared/fcm.service';
 import { ToastController } from '@ionic/angular';
 import { tap } from 'rxjs/operators';
+import { NewsService } from './news.service';
 
 @Component({
   selector: 'app-news',
@@ -12,19 +13,29 @@ export class NewsPage implements OnInit {
 
   constructor(
     public fcmService:FcmService,
-    public toastCtrl:ToastController) { }
+    private newsService:NewsService,
+    public toastCtrl:ToastController) { 
+      this.notificationSetup();
+    }
 
-  ionViewDidLoad(){
+  ionViewDidLoad(){}
+  ngOnInit() {}
+  private notificationSetup(){
     this.fcmService.getToken();
-    this.fcmService.listenToNotifications().pipe(
-      tap(msg=>{
-          this.makeToast(msg.body);
-      })
-    );
+    this.fcmService.listenToNotifications().subscribe(
+      (msg)=>{
+        this.makeToast(msg.body);
+        //TODO save notication
+        //this.newsService.addNotificationToUser(msg.body);
+      }
+    )
+    this.fcmService.receiveMessage().subscribe((msg)=>{
+      const body:any = (msg as any).body;
+      this.makeToast(body);
+      //TODO save notication
+    })
   }
-  ngOnInit() {
-  }
-  async makeToast(message){
+  private async makeToast(message){
     const toast = await this.toastCtrl.create({
       message,
       duration:3000,

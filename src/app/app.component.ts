@@ -23,8 +23,7 @@ export class AppComponent implements OnInit,OnDestroy{
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private authService:AuthService,
-    private router:Router,
-    private fcmService:FcmService ) {
+    private router:Router) {
     this.initializeApp();
   }
 
@@ -38,17 +37,8 @@ export class AppComponent implements OnInit,OnDestroy{
       this.splashScreen.hide();
     });
   }
-  onLogout() {
-    this.authService.logout();
-  }
+ 
 
-  // subscribeToNotifications(){
-  //   this.fcmService.sub('notifications');
-  // }
-  // unsubscribeFromNotifications(){
-  //     this.fcmService.unsub('notifications');
-   
-  // }
   ngOnInit(){
     this.authSub = this.authService.userIsAuthenticated.subscribe(isAuth=>{
         if(!isAuth && this.previousAuthState !== isAuth){
@@ -63,5 +53,8 @@ export class AppComponent implements OnInit,OnDestroy{
       this.authSub.unsubscribe();
     if(this.userProfileSub)
       this.userProfileSub.unsubscribe();
+  }
+  onLogout() {
+    this.authService.logout();
   }
 }
