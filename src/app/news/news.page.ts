@@ -24,6 +24,7 @@ export class NewsPage implements OnInit {
     this.fcmService.getToken();
     this.fcmService.listenToNotifications().subscribe(
       (msg)=>{
+        console.log(msg.body)
         this.makeToast(msg.body);
         //TODO save notication
         //this.newsService.addNotificationToUser(msg.body);
@@ -31,6 +32,7 @@ export class NewsPage implements OnInit {
     )
     this.fcmService.receiveMessage().subscribe((msg)=>{
       const body:any = (msg as any).body;
+      console.log(body);
       this.makeToast(body);
       //TODO save notication
     })
