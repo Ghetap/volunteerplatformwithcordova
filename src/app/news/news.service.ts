@@ -6,6 +6,7 @@ import { take, switchMap, map, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { UserProfile } from '../profile/userProfile.model';
 import { firestore } from 'firebase';
+import { Notification } from './notifications/notification.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class NewsService {
 
   private _annoucements = new BehaviorSubject<Announcement[]>([]);  
   private _myannouncements = new BehaviorSubject<Announcement[]>([]);
-  private _notifications = new BehaviorSubject<string[]>([]);
+  private _notifications = new BehaviorSubject<Notification[]>([]);
   constructor(
     private authService:AuthService,
     private firestore:AngularFirestore) { 
@@ -67,8 +68,7 @@ export class NewsService {
             street,
             category,
             0,
-            announcementPictureUrl,
-            [],
+            announcementPictureUrl
           )
           return of(newAnnouncement);
         }),
@@ -89,8 +89,7 @@ export class NewsService {
               city:data.city,
               street:data.street,
               category:data.category,
-              numberOfVisualisations:data.numberOfVisualisations,
-              messages:data.messages
+              numberOfVisualisations:data.numberOfVisualisations
             })
           }
         }),
@@ -122,8 +121,7 @@ export class NewsService {
             announcemetDoc.street,
             announcemetDoc.category,
             announcemetDoc.numberofVisualisations,
-            announcemetDoc.announcementPictureUrl,
-            announcemetDoc.messages,
+            announcemetDoc.announcementPictureUrl
             )
         )
       })
@@ -184,8 +182,7 @@ export class NewsService {
             announcemetDoc.street,
             announcemetDoc.category,
             announcemetDoc.numberofVisualisations,
-            announcemetDoc.announcementPictureUrl,
-            announcemetDoc.messages)
+            announcemetDoc.announcementPictureUrl)
         )
       })
       return announcements;
@@ -227,8 +224,7 @@ export class NewsService {
               street,
               category,
               oldAnnouncement.numberofVisualisations,
-              announcementPictureUrl,
-              oldAnnouncement.messages);
+              announcementPictureUrl);
               return of(upadetNews);
         }),
         switchMap(()=>{
@@ -290,8 +286,7 @@ export class NewsService {
           oldAnnouncement.street,
           oldAnnouncement.category,
           number,
-          oldAnnouncement.announcementPictureUrl,
-          oldAnnouncement.messages);
+          oldAnnouncement.announcementPictureUrl);
           return of(upadetNews);
     }),
     take(1),
@@ -307,7 +302,16 @@ export class NewsService {
     )    
   }
   
-  addNotificationToUser(text:string){
+  addNotificationToUser(text:string,title:string,announcementId:string){
+    console.log("addNotification");
+    let id = Math.random().toString();
+    const data = {
+      id,
+      announcementId,
+      title,
+      text
+    }
+    console.log(data);
     return this.authService.userId.pipe(
       take(1),
       map(userId=>{
@@ -317,20 +321,23 @@ export class NewsService {
         return userId
       }),
       map(userId=>{
+        console.log(userId);
         const ref = this.firestore.collection('users').doc(userId);
         return ref.update({
-          notifications : firestore.FieldValue.arrayUnion(text)
+          notifications : firestore.FieldValue.arrayUnion(data)
         })
       }),
       switchMap(()=>{return this._notifications}),
       take(1),
       tap((notifications)=>{
-        this._notifications.next(notifications.concat(text));
+        console.log(notifications);
+        this._notifications.next(notifications.concat(data));
       })
     )
   }
   
   getUsersNotifications(){
+    console.log("getNotifications");
     return this.authService.userId.pipe(
       take(1),
       map(userId=>{
@@ -340,17 +347,21 @@ export class NewsService {
         return userId
       }),
       switchMap(userId=>{
-        return this.firestore.collection('users',ref=>ref.where('userId','==',userId)).get()
+        var docRef = this.firestore.collection('users').doc(userId);
+        return docRef.get()
       }),
       take(1),
       map(resData=>{
-        let notifications = [];
-        resData.docs.map(doc=>{
-          notifications = [...doc.data().notifications]
+        const notifications = [];
+        const doc = resData.data();
+        console.log(doc.notifications);
+        doc.notifications.map(item=>{
+          notifications.push(new Notification(item.id,item.announcementId,item.title,item.text))
         })
         return notifications;
       }),
       tap(list=>{
+        console.log(list);
         this._notifications.next(list);
       })
     )

@@ -3,10 +3,41 @@
     <ion-buttons slot="start">
       <ion-menu-button color="primary"></ion-menu-button>
     </ion-buttons>
-    <ion-title class="ion-text-center">Notifications</ion-title>
+    <ion-title class="ion-text-center">Your Notifications</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
- <h1></h1> 
+  <ion-grid *ngIf="isLoading">
+    <ion-row>
+      <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
+        <ion-spinner color="primary"></ion-spinner>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid *ngIf="!isLoading">
+    <ion-row>
+      <ion-col size="12" size-sm="8" offset-sm="2">
+        <div *ngIf="!isLoading && loadedNotifications.length <= 0" class="ion-text-center">
+          <p>No notifications :(</p>
+        </div>
+        <ion-list>
+          <ion-item-sliding
+           *ngFor="let notification of loadedNotifications"
+           #slidingNotification>
+            <app-notification-item [notification]="notification"></app-notification-item>
+            <ion-item-options>
+              <ion-item-option color="primary" (click)="onDeleteNotification(notification.id,slidingNotification)">
+                <ion-icon name="trash" slot="top"></ion-icon>
+                Delete
+              </ion-item-option>
+              <ion-item-option color="secondary" (click)="onAnswer(notification.announcementId,notification.title,slidingNotification)">
+                <ion-icon name="arrow-redo-sharp" slot="top"></ion-icon>
+                Answer
+              </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

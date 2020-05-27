@@ -5,7 +5,6 @@ import { NewsService } from '../news.service';
 import { MenuController } from '@ionic/angular';
 import { AuthService } from 'src/app/auth/auth.service';
 import { take } from 'rxjs/operators';
-import { FcmService } from 'src/app/shared/fcm.service';
 
 @Component({
   selector: 'app-announcement',
@@ -23,8 +22,7 @@ export class AnnouncementPage implements OnInit, OnDestroy {
   isFilterOpened=false;
   constructor(private newsService:NewsService,
     private menuCtrl:MenuController,
-    private authService:AuthService,
-    private fcmService:FcmService) { 
+    private authService:AuthService) { 
     }
 
   ngOnInit() {

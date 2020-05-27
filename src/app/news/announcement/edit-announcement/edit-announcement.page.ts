@@ -53,8 +53,7 @@ export class EditAnnouncementPage implements OnInit {
           announcement.street,
           announcement.category,
           announcement.numberofVisualisations,
-          announcement.announcementPictureUrl,
-          announcement.messages);
+          announcement.announcementPictureUrl);
 
           console.log(this.announcementtoBeEdited);
         this.form = new FormGroup({

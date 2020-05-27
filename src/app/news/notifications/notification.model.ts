@@ -1,6 +1,8 @@
 export class Notification{
     constructor(
+        public id:string,
+        public announcementId:string,
         public title:any,
-        public body:any,
+        public text:any,
     ){};
 }

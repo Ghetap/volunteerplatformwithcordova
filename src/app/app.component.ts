@@ -1,13 +1,12 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
-import { Platform, ToastController } from '@ionic/angular';
+import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './auth/auth.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserProfile } from './profile/userProfile.model';
-import { FcmService } from './shared/fcm.service';
 
 @Component({
   selector: 'app-root',

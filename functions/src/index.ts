@@ -41,18 +41,21 @@ export const sendFcm = functions.firestore.document('chats/{chatId}').onWrite(
         let receiverEmail;
         let senderEmail;
         let text;
+        let id;
         console.log(after);
         if(after){
             receiverEmail = after.messages[after.messages.length - 1]['receiverEmail'];
             senderEmail = after.messages[after.messages.length - 1]['senderEmail']
             text = after.messages[after.messages.length - 1]['text'];
+            id = event.after.id;
         }    
         console.log(receiverEmail);
         console.log(senderEmail);
         console.log(text);
+        console.log(id);
         const payload = {
             notification:{
-                title:'New message from ' + senderEmail,
+                title:'New message from ' + senderEmail + ' for announcement with ID: ' + id,
                 body: text
             }
         }

@@ -1,18 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { AngularFireMessaging } from '@angular/fire/messaging';
-import { ToastController } from '@ionic/angular';
 import { take, switchMap, map, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Firebase } from '@ionic-native/firebase/ngx';
 import { Platform } from '@ionic/angular';
-import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class FcmService implements OnDestroy{
-  currentMessage = new BehaviorSubject(null);
   messages$:Observable<any>;
   token;
   constructor(
@@ -20,8 +17,7 @@ export class FcmService implements OnDestroy{
     public firestore:AngularFirestore,
     private platform :Platform,
     private afMessaging:AngularFireMessaging,
-    private authService:AuthService,
-    private toastController:ToastController) {
+    private authService:AuthService) {
       // this.afMessaging.messaging.subscribe(
       //   (_messaging) => {
       //     _messaging.onMessage = _messaging.onMessage.bind(_messaging);
@@ -76,29 +72,8 @@ export class FcmService implements OnDestroy{
   listenToNotifications(){
     return this.firebaseNative.onNotificationOpen();
   }
-  async makeToast(message){
-    const toast = await this.toastController.create({
-      message,
-      duration:3000,
-      position:'top', 
-      buttons:['Dismiss']
-    });
-    toast.present();
-  }
   receiveMessage() {
     return this.afMessaging.messaging; 
   }
-  // sub(topic){
-  //   this.functions
-  //   .httpsCallable('subscribeToTopic')({topic,token:this.token})
-  //   .pipe(tap(_=>this.makeToast(`subscribed to ${topic}`)))
-  //   .subscribe();
-  // }
-  // unsub(topic){
-  //   this.functions
-  //   .httpsCallable('unsubscribeFromTopic')({topic,token:this.token})
-  //   .pipe(tap(_=>this.makeToast(`unsubscribed from ${topic}`)))
-  //   .subscribe();
-  // }
   ngOnDestroy(){}
 }

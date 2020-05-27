@@ -1,3 +1,7 @@
+interface Notification{
+  title:string,
+  text:string
+}
 export class UserProfile {
     constructor(
       public id: string,
@@ -8,6 +12,6 @@ export class UserProfile {
       public where:string,
       public imageUrl?:string,
       public description?:string,
-      public notifications?:string[]
+      public notifications?:Notification[]
     ) {}
 }

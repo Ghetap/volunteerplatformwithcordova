@@ -5,7 +5,6 @@ import { LoadingController, AlertController} from '@ionic/angular';
 import { Observable, Subscription } from 'rxjs';
 import {  AngularFirestore } from '@angular/fire/firestore';
 import { AuthService, AuthResponseData } from './auth.service';
-import { FcmService } from '../shared/fcm.service';
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.page.html',
@@ -23,8 +22,7 @@ export class AuthPage implements OnInit, OnDestroy{
     private router: Router,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
-    private firestore:AngularFirestore,
-    private fcmService:FcmService
+    private firestore:AngularFirestore
   ) {}
 
   ngOnInit() {
@@ -75,7 +73,8 @@ export class AuthPage implements OnInit, OnDestroy{
                 .set({
                   email:email,
                   password:password,
-                  imageUrl:"assets/icon/pctplaceholder.png"
+                  imageUrl:"assets/icon/pctplaceholder.png",
+                  notifications: []
                 })
                 this.isLoading = false;
                 loadingEl.dismiss();

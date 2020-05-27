@@ -14,7 +14,6 @@ export class Announcement{
         public street:string,
         public category:string,
         public numberOfVisualisations:number,
-        public announcementPictureUrl:string,
-        public messages:Message[]
+        public announcementPictureUrl:string
     ){};
 }
