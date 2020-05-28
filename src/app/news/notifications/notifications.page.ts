@@ -41,9 +41,11 @@ export class NotificationsPage implements OnInit,OnDestroy {
     let receiverEmail;
     this.chatService.getSenderEmail().subscribe(email=>{
         senderEmail=email
-        receiverEmail = notificationTitle.match(new RegExp('from' + '\\s(\\w+)'))[1];
-        console.log(receiverEmail);
-        this.router.navigate(['/','news','tabs','chat',announcementId,senderEmail,receiverEmail]);
+        const firstvariable = "from";
+        const secondvariable = "for";
+        receiverEmail = 
+        notificationTitle.match(new RegExp(firstvariable + "(.*)" + secondvariable));
+        this.router.navigate(['/','news','tabs','chat',announcementId[0],senderEmail,receiverEmail[1].trim()]);
     });
   }
   onDeleteNotification(announcementId:string,slidingAnnouncement){

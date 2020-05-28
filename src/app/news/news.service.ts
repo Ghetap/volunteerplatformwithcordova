@@ -16,6 +16,7 @@ export class NewsService {
   private _annoucements = new BehaviorSubject<Announcement[]>([]);  
   private _myannouncements = new BehaviorSubject<Announcement[]>([]);
   private _notifications = new BehaviorSubject<Notification[]>([]);
+  private _numberOfNewNotifications = new BehaviorSubject<number>(0);
   constructor(
     private authService:AuthService,
     private firestore:AngularFirestore) { 
@@ -31,6 +32,10 @@ export class NewsService {
 
   get notifications(){
     return this._notifications.asObservable();
+  }
+
+  get numberOfNewNotifications(){
+    return this._numberOfNewNotifications.asObservable();
   }
   addAnouncement(
     title:string,
@@ -331,7 +336,9 @@ export class NewsService {
       take(1),
       tap((notifications)=>{
         console.log(notifications);
-        this._notifications.next(notifications.concat(data));
+        const list = notifications.concat(data);
+        this._numberOfNewNotifications.next(list.length - notifications.length);
+        this._notifications.next(notifications.concat(list));
       })
     )
   }
@@ -363,7 +370,7 @@ export class NewsService {
       tap(list=>{
         console.log(list);
         this._notifications.next(list);
-      })
+      }),
     )
   }
 }

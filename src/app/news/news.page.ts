@@ -3,6 +3,7 @@ import { FcmService } from '../shared/fcm.service';
 import { ToastController } from '@ionic/angular';
 import { NewsService } from './news.service';
 import { Notification } from './notifications/notification.model';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -12,8 +13,6 @@ import { Notification } from './notifications/notification.model';
 })
 export class NewsPage implements OnInit {
 
-  prevLenght:number;
-  currentLenght:number;
   numberNewNotifications:number;
   notifications:Notification[];
   constructor(
@@ -26,11 +25,10 @@ export class NewsPage implements OnInit {
   ionViewDidLoad(){}
   ngOnInit() {
     this.newsService.notifications.subscribe(notificationsList=>{
-      this.prevLenght = this.notifications.length;
       this.notifications = notificationsList;
-      this.currentLenght = this.notifications.length;
-      this.numberNewNotifications = this.currentLenght-this.prevLenght;
-      console.log(this.numberNewNotifications);
+      this.newsService.numberOfNewNotifications.subscribe(nrNotif=>{
+        this.numberNewNotifications = nrNotif;
+      })
     })
   }
   private notificationSetup(){

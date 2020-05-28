@@ -92,10 +92,10 @@
           <ion-text> {{ announcement.numberOfVisualisations }}</ion-text>
         </ion-label>
 
-        <ion-list>
+        <ion-list *ngIf="announcementAuthor && announcementAuthor.email !== currentUserEmail">
           <ion-item-sliding #slidingAuthor>
            <app-sliding-item [user]="announcementAuthor"></app-sliding-item>
-           <ion-item-options>
+           <ion-item-options >
              <ion-item-option color="primary" (click)="onSendMessage(announcementAuthor.email,slidingAuthor)">
               <ion-icon name="chatbubble-sharp" slot="top"></ion-icon>
                 Send message
@@ -103,6 +103,20 @@
            </ion-item-options>
          </ion-item-sliding>
         </ion-list>
+        <!-- <ion-list *ngIf="announcementAuthor && announcementAuthor.email == currentUserEmail 
+        && conversations && conversations.length > 0">
+          <ion-item-sliding
+           *ngFor="let conversation of conversations"
+           #slidingConversation>
+            <app-conversation-item [conversation]="conversation"></app-conversation-item>
+            <ion-item-options>
+              <ion-item-option color="primary" (click)="onSendMessage(conversation.email,slidingConversation)">
+                <ion-icon name="chatbubble-sharp" slot="top"></ion-icon>
+                  Chat
+               </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ion-list> -->
       </ion-card>
      </ion-col>
    </ion-row>

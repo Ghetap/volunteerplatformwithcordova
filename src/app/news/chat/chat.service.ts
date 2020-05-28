@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, } from 'rxjs';
+import { BehaviorSubject, combineLatest, } from 'rxjs';
 import { UserProfile } from 'src/app/profile/userProfile.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map, tap, take, switchMap } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { firestore } from 'firebase';
+import { Conversation } from '../announcement/conversation-item/conversation.model';
 
 interface Message{
   senderEmail,
@@ -22,7 +23,7 @@ interface Item{
 export class ChatService {
 
   private _messages = new BehaviorSubject<Message[]>([]);
-  
+  private _conversations = new BehaviorSubject<Conversation[]>([]);
   get messages(){
     return this._messages.asObservable();
   }
@@ -52,6 +53,40 @@ export class ChatService {
       return {id: doc.payload.id, ...doc.payload.data() as Item}
     }))
   }
+   
+  // getChat(docId:string,receiverEmail:string,senderEmail:string){
+  //   const firstRef = this.firestore.collection<any>(`chats${docId}`,
+  //   ref=>ref.where('messages',"array-contains-any",[senderEmail,receiverEmail]))
+  //   .snapshotChanges()
+  //   .pipe(
+  //     map(changes => {
+  //       return changes.map(a => {
+  //         const data = a.payload.doc.data() as Item;
+  //         //const id = a.payload.doc.id;
+  //         return {...data};
+  //       })
+  //     })
+  //   );
+  //   const secondRef = this.firestore.collection<any>(`chats${docId}`,
+  //   ref=>ref.where('messages',"array-contains-any",[senderEmail,receiverEmail]))
+  //   .snapshotChanges()
+  //   .pipe(
+  //     map(changes => {
+  //       return changes.map(a => {
+  //         const data = a.payload.doc.data() as Item;
+  //         //const id = a.payload.doc.id;
+  //         return {...data};
+  //       })
+  //     })
+  //   );
+  //   const result = combineLatest<any[]>(firstRef, secondRef).pipe(
+  //     map(arr => {
+  //       console.log(arr);
+  //       arr.reduce((acc, cur) => acc.concat(cur))
+  //     })
+  //   );
+  //   return result;
+  // }
 
   chatExists(docId:string){
     return this.firestore.collection<any>('chats').doc(docId).get()
@@ -76,7 +111,30 @@ export class ChatService {
       messages : firestore.FieldValue.arrayUnion(data)
     })
   }
-  
+  getConversations(email:string,docId:string){
+    return this.firestore.collection<any>('chats').doc(docId).get()
+    .pipe(
+      take(1),
+      map((doc)=>{
+        console.log(doc.data());
+        const conversation=[]
+        if(doc){
+           doc.data().messages.map(message=>{
+          if((message.receiverEmail === email && message.senderEmail !== email)){
+            conversation.push(new Conversation("",message.senderEmail))
+          }else if(message.senderEmail === email && message.receiverEmail !== email){
+            conversation.push(new Conversation("",message.receiverEmail))
+          }
+        })
+        }
+      return conversation;
+    }),
+    tap(list=>{
+      console.log(list);
+      this._conversations.next(list);
+    })
+    )
+  }
   // getConversationBetweenSenderReceiver(chat$:Observable<any>, receiverEmail:string,senderEmail:string){
   //   console.log("getConversation");
   //   let chat;

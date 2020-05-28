@@ -65,7 +65,7 @@
 <ion-content class="ion-padding">
   <ion-segment value="all" (ionChange)="onFilterUpdate($event)">
     <ion-segment-button value="all">Active</ion-segment-button>
-    <ion-segment-button value="my">Finished</ion-segment-button>
+    <ion-segment-button value="my">Favorites</ion-segment-button>
   </ion-segment>
   <ion-grid *ngIf="isLoading">
     <ion-row>
@@ -77,12 +77,12 @@
   <ion-grid *ngIf="!isLoading && (!copyAnnouncements || copyAnnouncements.length <= 0)">
     <ion-row>
       <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
-        <p>You haven't postet any news yet. Come back later :)
+        <p>You have no favourites yet. Come back later :)
         </p>
       </ion-col>
     </ion-row>
   </ion-grid>
-  <ion-grid *ngIf="!isLoading && copyAnnouncements.length > 0">
+  <ion-grid *ngIf="!isLoading && copyAnnouncements && copyAnnouncements.length > 0">
     <ion-row>
       <ion-col size-sm="8" offset-sm="2" class="ion-text-center">
         <ion-virtual-scroll 

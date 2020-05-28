@@ -3,11 +3,12 @@ import { NewsService } from '../../news.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController, AlertController, IonItemSliding, LoadingController } from '@ionic/angular';
 import { Announcement } from '../announcement.model';
-import { AuthService } from 'src/app/auth/auth.service';
+
 import { Subscription } from 'rxjs';
 import { UserProfile } from 'src/app/profile/userProfile.model';
-import { ProfileService } from 'src/app/profile/profile.service';
+
 import { ChatService } from '../../chat/chat.service';
+import { Conversation } from '../conversation-item/conversation.model';
 
 @Component({
   selector: 'app-announcement-detail',
@@ -21,6 +22,8 @@ export class AnnouncementDetailPage implements OnInit,OnDestroy {
   annoucementDetailSub:Subscription;
   isLoading:boolean = false;
   announcementAuthor:UserProfile
+  currentUserEmail:string;
+  conversations:Conversation[];
   constructor(
     private newsService:NewsService,
     private route:ActivatedRoute,
@@ -58,6 +61,9 @@ export class AnnouncementDetailPage implements OnInit,OnDestroy {
             console.log(announcement)
             this.newsService.incrementNumberofViews(this.announcement.id,this.announcement.numberOfVisualisations+1).subscribe();
             this.getAuthor();
+            this.chatService.getSenderEmail().subscribe(email=>{
+              this.currentUserEmail=email;
+            });
             this.isLoading = false;
           },error=>{
             this.alertCtrl.create({

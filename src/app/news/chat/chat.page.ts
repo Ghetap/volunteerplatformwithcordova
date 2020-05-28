@@ -4,6 +4,8 @@ import { NavController } from '@ionic/angular';
 import { ActivatedRoute,  } from '@angular/router';
 import { ChatService } from './chat.service';
 import { Subscription, Observable } from 'rxjs';
+import { Message } from './message.model';
+import { filter, map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-chat',
@@ -19,6 +21,7 @@ export class ChatPage implements OnInit,OnDestroy{
   chat$:Observable<any>;
   messageSubscription:Subscription;
   getMessageSubcritpion:Subscription;
+  messages:Message[];
   constructor(
     public firestore:AngularFirestore,
     private navCtrl:NavController,
@@ -39,7 +42,11 @@ export class ChatPage implements OnInit,OnDestroy{
         this.receiverEmail = paramMap.get('emailReceiver');
         console.log(this.receiverEmail);
         this.senderEmail = paramMap.get('emailSender')
-        this.chat$ = this.chatService.getChat(this.chatId);
+        this.chat$ = this.chatService.getChat(this.chatId).pipe(switchMap(data=>{
+          return data.messages.filter(item=>item['receiverEmail'] === this.senderEmail 
+          || item['receiverEmail'] === this.senderEmail && item['receiverEmail'] === this.receiverEmail 
+          || item['receiverEmail'] === this.receiverEmail)}
+        ));
       }
     )
   }
