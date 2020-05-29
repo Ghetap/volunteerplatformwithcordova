@@ -21,7 +21,7 @@ export class ChatPage implements OnInit,OnDestroy{
   chat$:Observable<any>;
   messageSubscription:Subscription;
   getMessageSubcritpion:Subscription;
-  messages:Message[];
+  messages$:Observable<any>;
   constructor(
     public firestore:AngularFirestore,
     private navCtrl:NavController,
@@ -38,15 +38,9 @@ export class ChatPage implements OnInit,OnDestroy{
             return;
         }
         this.chatId = paramMap.get('chatId');
-        console.log(this.chatId);
         this.receiverEmail = paramMap.get('emailReceiver');
-        console.log(this.receiverEmail);
         this.senderEmail = paramMap.get('emailSender')
-        this.chat$ = this.chatService.getChat(this.chatId).pipe(switchMap(data=>{
-          return data.messages.filter(item=>item['receiverEmail'] === this.senderEmail 
-          || item['receiverEmail'] === this.senderEmail && item['receiverEmail'] === this.receiverEmail 
-          || item['receiverEmail'] === this.receiverEmail)}
-        ));
+        this.chat$ = this.chatService.getChat(this.chatId);
       }
     )
   }
@@ -62,5 +56,8 @@ export class ChatPage implements OnInit,OnDestroy{
       this.messageSubscription.unsubscribe();
     if(this.getMessageSubcritpion)
       this.getMessageSubcritpion.unsubscribe();
+  }
+  validEmail(message:Message){
+    return message.receiverEmail !== this.senderEmail || message.senderEmail !== this.senderEmail 
   }
 }

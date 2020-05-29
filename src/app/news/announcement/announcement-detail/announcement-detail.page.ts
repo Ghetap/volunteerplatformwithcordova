@@ -58,7 +58,6 @@ export class AnnouncementDetailPage implements OnInit,OnDestroy {
             announcement.category,
             announcement.numberOfVisualisations,
             announcement.announcementPictureUrl);
-            console.log(announcement)
             this.newsService.incrementNumberofViews(this.announcement.id,this.announcement.numberOfVisualisations+1).subscribe();
             this.getAuthor();
             this.chatService.getSenderEmail().subscribe(email=>{

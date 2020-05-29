@@ -46,7 +46,6 @@ export class FcmService implements OnDestroy{
     }
   }
   private saveTokenToFirestore(token){
-    console.log(token);
     if(!token) 
       return;
     return this.authService.userId.pipe(
@@ -59,7 +58,6 @@ export class FcmService implements OnDestroy{
         return doc.data().email;
       }),
       tap(email=>{
-        console.log(email);
         const devicesRef =  this.firestore.collection('devices');
         devicesRef.doc(token).set({
           token,

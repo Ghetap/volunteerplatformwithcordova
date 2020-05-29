@@ -12,6 +12,7 @@
   <ng-container *ngIf= "chat$ | async as chat">
     <div id="chatMessages">
         <div class="message" *ngFor="let message of chat.messages; trackBy: trackByCreated">
+          <div *ngIf="message.receiverEmail === this.senderEmail || message.senderEmail === this.senderEmail ">
             <div [class]="message.senderEmail === this.senderEmail ? 'innerMessage messageRight' : 'innerMessage messageLeft'">
               <div class="username">{{message.senderEmail}}
                 <div class="timestamp">{{ message.date | date : 'dd/MM/yyyy'}} </div>
@@ -19,6 +20,7 @@
               </div>
               <div class="message">{{ message.text }}</div>
             </div>
+          </div>
         </div>
       </div>
   </ng-container>
