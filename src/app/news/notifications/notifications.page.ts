@@ -23,7 +23,7 @@ export class NotificationsPage implements OnInit,OnDestroy {
     private chatService:ChatService) { }
 
   ngOnInit() {
-   this.notificationSubscription= this.newsService.notifications.subscribe(notificationsList=>{
+   this.notificationSubscription = this.newsService.notifications.subscribe(notificationsList=>{
       this.loadedNotifications = notificationsList;
       this.seenNotifications = notificationsList;
     })
@@ -45,7 +45,7 @@ export class NotificationsPage implements OnInit,OnDestroy {
         const secondvariable = "for";
         receiverEmail = 
         notificationTitle.match(new RegExp(firstvariable + "(.*)" + secondvariable));
-        this.router.navigate(['/','news','tabs','chat',announcementId[0],senderEmail,receiverEmail[1].trim()]);
+        this.router.navigate(['/','news','tabs','chat',announcementId,senderEmail,receiverEmail[1].trim()]);
     });
   }
   onDeleteNotification(announcementId:string,slidingAnnouncement){
@@ -54,5 +54,8 @@ export class NotificationsPage implements OnInit,OnDestroy {
   ngOnDestroy(){
     if(this.notificationSubscription)
       this.notificationSubscription.unsubscribe();
+  }
+  ionViewDidLeave(){
+    //this.newsService.resetNumberNotifications();
   }
 }

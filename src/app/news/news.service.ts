@@ -16,10 +16,10 @@ export class NewsService {
   private _annoucements = new BehaviorSubject<Announcement[]>([]);  
   private _myannouncements = new BehaviorSubject<Announcement[]>([]);
   private _notifications = new BehaviorSubject<Notification[]>([]);
-  private _numberOfNewNotifications = new BehaviorSubject<number>(0);
   constructor(
     private authService:AuthService,
     private firestore:AngularFirestore) { 
+      this.notifications.subscribe(list=>{})
     }
 
   get announcements(){
@@ -32,10 +32,6 @@ export class NewsService {
 
   get notifications(){
     return this._notifications.asObservable();
-  }
-
-  get numberOfNewNotifications(){
-    return this._numberOfNewNotifications.asObservable();
   }
   addAnouncement(
     title:string,
@@ -307,41 +303,42 @@ export class NewsService {
     )    
   }
   
-  addNotificationToUser(text:string,title:string,announcementId:string){
-    console.log("addNotification");
-    let id = Math.random().toString();
-    const data = {
-      id,
-      announcementId,
-      title,
-      text
-    }
-    console.log(data);
-    return this.authService.userId.pipe(
-      take(1),
-      map(userId=>{
-        if(!userId){
-          throw new Error('User not found!')
-        }
-        return userId
-      }),
-      map(userId=>{
-        console.log(userId);
-        const ref = this.firestore.collection('users').doc(userId);
-        return ref.update({
-          notifications : firestore.FieldValue.arrayUnion(data)
-        })
-      }),
-      switchMap(()=>{return this._notifications}),
-      take(1),
-      tap((notifications)=>{
-        console.log(notifications);
-        const list = notifications.concat(data);
-        this._numberOfNewNotifications.next(list.length - notifications.length);
-        this._notifications.next(notifications.concat(list));
-      })
-    )
-  }
+  // addNotificationToUser(text:string,title:string,announcementId:string){
+  //   console.log("addNotification");
+  //   let id = Math.random().toString();
+  //   const data = {
+  //     id,
+  //     announcementId,
+  //     title,
+  //     text
+  //   }
+  //   console.log(data);
+  //   return this.authService.userId.pipe(
+  //     take(1),
+  //     map(userId=>{
+  //       if(!userId){
+  //         throw new Error('User not found!')
+  //       }
+  //       return userId
+  //     }),
+  //     map(userId=>{
+  //       console.log(userId);
+  //       const ref = this.firestore.collection('users').doc(userId);
+  //       return ref.update({
+  //         notifications : firestore.FieldValue.arrayUnion(data)
+  //       })
+  //     }),
+  //     switchMap(()=>{return this._notifications}),
+  //     take(1),
+  //     tap((notifications)=>{
+  //       console.log(notifications);
+  //       const list = notifications.concat(data);
+  //       this.numberNotifOnAddNew = this.numberNotifOnAddNew + 1;
+  //       this._numberOfNewNotifications.next(this.numberNotifOnAddNew);
+  //       this._notifications.next(notifications.concat(list));
+  //     })
+  //   )
+  // }
   
   getUsersNotifications(){
     console.log("getNotifications");
@@ -367,10 +364,10 @@ export class NewsService {
         })
         return notifications;
       }),
-      tap(list=>{
-        console.log(list);
+      tap(list=>{       
         this._notifications.next(list);
-      }),
+      })
     )
   }
+
 }

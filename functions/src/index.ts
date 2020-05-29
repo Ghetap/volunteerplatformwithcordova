@@ -41,24 +41,40 @@ export const sendFcm = functions.firestore.document('chats/{chatId}').onWrite(
         let receiverEmail;
         let senderEmail;
         let text;
-        let id;
+        let announcementId;
         console.log(after);
         if(after){
             receiverEmail = after.messages[after.messages.length - 1]['receiverEmail'];
             senderEmail = after.messages[after.messages.length - 1]['senderEmail']
             text = after.messages[after.messages.length - 1]['text'];
-            id = event.after.id;
+            announcementId = event.after.id;
         }    
-        console.log(receiverEmail);
-        console.log(senderEmail);
-        console.log(text);
-        console.log(id);
+        const title = 'New message from ' + senderEmail + ' for announcement with ID: ' + announcementId;
         const payload = {
             notification:{
-                title:'New message from ' + senderEmail + ' for announcement with ID: ' + id,
+                title: title,
                 body: text
             }
         }
+        const id = Math.random().toString();
+        const data = {
+            id,
+            announcementId,
+            title,
+            text
+        }
+        console.log(data);
+        await db.collection('users').where('email','==',receiverEmail).get()
+        .then(snapshot=>{
+            snapshot.forEach(function(doc){
+                console.log(doc);
+                db.collection('users').doc(doc.id).update({
+                    notifications : admin.firestore.FieldValue.arrayUnion(data)
+                }).then(()=>{console.log("notification saved")})
+                .catch(err=>console.log(err))
+            })
+        }).catch(err=>console.log("error"));
+
         const devicesRef = db.collection('devices').where('email','==',receiverEmail);
         const devices = await devicesRef.get();
         const tokens: string | any[] = [];
@@ -69,4 +85,3 @@ export const sendFcm = functions.firestore.document('chats/{chatId}').onWrite(
         return admin.messaging().sendToDevice(tokens,payload);
     }
 )
-

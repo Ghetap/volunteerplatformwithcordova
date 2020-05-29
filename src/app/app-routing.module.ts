@@ -18,6 +18,11 @@ const routes: Routes = [
     path: 'profile',
     loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule),
     canLoad:[AuthGuard]
+  },
+  {
+    path:'conversations',
+    loadChildren: () => import('./conversations/conversations.module').then( m =>m.ConversationsPageModule),
+    canLoad:[AuthGuard]
   }
 ];
 

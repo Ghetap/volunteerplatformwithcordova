@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/news/tabs/announcement" color="primary"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Your Conversations</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-item-sliding
+     *ngFor="let conversation of conversation"
+     #slidingConversation>
+      <app-conversation-item [conversation]="conversations"></app-conversation-item>
+      <ion-item-options>
+        <ion-item-option color="primary" (click)="onGoToChat(conversation.email,slidingConversation)">
+          <ion-icon name="trash" slot="top"></ion-icon>
+          Go to chat
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>

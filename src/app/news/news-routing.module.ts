@@ -63,9 +63,7 @@ const routes: Routes = [
     path:'',
     redirectTo:'/news/tabs/announcement',
     pathMatch:'full'
-  },
- 
-  
+  }
 ];
 
 @NgModule({

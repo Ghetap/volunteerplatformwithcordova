@@ -3,12 +3,9 @@ import { NewsService } from '../../news.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController, AlertController, IonItemSliding, LoadingController } from '@ionic/angular';
 import { Announcement } from '../announcement.model';
-
 import { Subscription } from 'rxjs';
 import { UserProfile } from 'src/app/profile/userProfile.model';
-
 import { ChatService } from '../../chat/chat.service';
-import { Conversation } from '../conversation-item/conversation.model';
 
 @Component({
   selector: 'app-announcement-detail',
@@ -23,7 +20,6 @@ export class AnnouncementDetailPage implements OnInit,OnDestroy {
   isLoading:boolean = false;
   announcementAuthor:UserProfile
   currentUserEmail:string;
-  conversations:Conversation[];
   constructor(
     private newsService:NewsService,
     private route:ActivatedRoute,

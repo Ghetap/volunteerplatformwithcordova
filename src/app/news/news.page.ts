@@ -5,7 +5,6 @@ import { NewsService } from './news.service';
 import { Notification } from './notifications/notification.model';
 import { Observable } from 'rxjs';
 
-
 @Component({
   selector: 'app-news',
   templateUrl: './news.page.html',
@@ -13,8 +12,8 @@ import { Observable } from 'rxjs';
 })
 export class NewsPage implements OnInit {
 
-  numberNewNotifications:number;
-  notifications:Notification[];
+  numberNewNotifications:number=0;
+  public notifications:Notification[];
   constructor(
     public fcmService:FcmService,
     public newsService:NewsService,
@@ -26,29 +25,24 @@ export class NewsPage implements OnInit {
   ngOnInit() {
     this.newsService.notifications.subscribe(notificationsList=>{
       this.notifications = notificationsList;
-      this.newsService.numberOfNewNotifications.subscribe(nrNotif=>{
-        this.numberNewNotifications = nrNotif;
-      })
     })
+  }
+  ionViewWillEnter(){
   }
   private notificationSetup(){
     this.fcmService.getToken();
     this.fcmService.listenToNotifications().subscribe(
       (msg)=>{
-        console.log(msg.body)
         this.makeToast(msg.body);
-        let idAnnouncement = msg.title.split(" ").splice(-1);
-        this.newsService.addNotificationToUser(msg.body,msg.title,idAnnouncement).subscribe();
+        this.numberNewNotifications++;
       }
     )
     this.fcmService.receiveMessage().subscribe(
       (messaging: any) => {
         messaging.onMessageCallback = (payload: any) => {
-          console.log(payload);
+          //let idAnnouncement = (payload.notification.title.split(" ").splice(-1))[0];
           this.makeToast(payload.notification.body);
-          let idAnnouncement = (payload.notification.title.split(" ").splice(-1))[0];
-          console.log(idAnnouncement);
-          this.newsService.addNotificationToUser(payload.notification.body,payload.notification.title,idAnnouncement).subscribe();
+          this.numberNewNotifications++;
         };
       });
   }
