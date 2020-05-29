@@ -54,40 +54,6 @@ export class ChatService {
     }))
   }
    
-  // getChat(docId:string,receiverEmail:string,senderEmail:string){
-  //   const firstRef = this.firestore.collection<any>(`chats${docId}`,
-  //   ref=>ref.where('messages',"array-contains-any",[senderEmail,receiverEmail]))
-  //   .snapshotChanges()
-  //   .pipe(
-  //     map(changes => {
-  //       return changes.map(a => {
-  //         const data = a.payload.doc.data() as Item;
-  //         //const id = a.payload.doc.id;
-  //         return {...data};
-  //       })
-  //     })
-  //   );
-  //   const secondRef = this.firestore.collection<any>(`chats${docId}`,
-  //   ref=>ref.where('messages',"array-contains-any",[senderEmail,receiverEmail]))
-  //   .snapshotChanges()
-  //   .pipe(
-  //     map(changes => {
-  //       return changes.map(a => {
-  //         const data = a.payload.doc.data() as Item;
-  //         //const id = a.payload.doc.id;
-  //         return {...data};
-  //       })
-  //     })
-  //   );
-  //   const result = combineLatest<any[]>(firstRef, secondRef).pipe(
-  //     map(arr => {
-  //       console.log(arr);
-  //       arr.reduce((acc, cur) => acc.concat(cur))
-  //     })
-  //   );
-  //   return result;
-  // }
-
   chatExists(docId:string){
     return this.firestore.collection<any>('chats').doc(docId).get()
   }
