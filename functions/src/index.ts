@@ -49,7 +49,7 @@ export const sendFcm = functions.firestore.document('chats/{chatId}').onWrite(
             text = after.messages[after.messages.length - 1]['text'];
             announcementId = event.after.id;
         }    
-        const title = 'New message from ' + senderEmail + ' for announcement with ID: ' + announcementId;
+        const title = 'From ' + senderEmail + ' for announcement with ID: ' + announcementId;
         const payload = {
             notification:{
                 title: title,
@@ -57,11 +57,15 @@ export const sendFcm = functions.firestore.document('chats/{chatId}').onWrite(
             }
         }
         const id = Math.random().toString();
+        const seen = false;
+        const date = Date.now();
         const data = {
             id,
             announcementId,
             title,
-            text
+            text,
+            seen,
+            date
         }
         console.log(data);
         await db.collection('users').where('email','==',receiverEmail).get()

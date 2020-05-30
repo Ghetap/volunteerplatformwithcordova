@@ -3,8 +3,14 @@
     <ion-img src="assets/icon/blue_bonfire.png"></ion-img>
   </ion-thumbnail>
   <ion-item>
-  <ion-label>
+  <ion-label *ngIf="notification.seen">
     <p>{{ notification.title }}</p>
     <p>{{notification.text.substring(0,30)}}</p>
+    <p>{{notification.date | date: 'dd/MM/yyyy HH:mm' }}</p>
+  </ion-label>
+  <ion-label *ngIf="!notification.seen">
+    <p style="font-weight:bold">{{notification.title}}</p>
+    <p style="font-weight:bold">{{notification.text.substring(0,30)}}</p>
+    <p>{{notification.date | date:  'dd/MM/yyyy HH:mm' }}</p>
   </ion-label>
   </ion-item>

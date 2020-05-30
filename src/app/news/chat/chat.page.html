@@ -4,7 +4,7 @@
       <ion-back-button defaultHref="/news/tabs/announcement" color="primary"></ion-back-button>
 
     </ion-buttons>
-    <ion-title class="ion-text-center">Chat Room</ion-title>
+    <ion-title class="ion-text-center">Chat Room For This Announcement</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -13,13 +13,15 @@
     <div id="chatMessages">
         <div class="message" *ngFor="let message of chat.messages; trackBy: trackByCreated">
           <div *ngIf="message.receiverEmail === this.senderEmail || message.senderEmail === this.senderEmail">
+            <div *ngIf="message.receiverEmail === this.receiverEmail || message.senderEmail === this.receiverEmail">
             <div [class]="message.senderEmail === this.senderEmail ? 'innerMessage messageRight' : 'innerMessage messageLeft'">
               <div class="username">{{message.senderEmail}}
-                <div class="timestamp">{{ message.date | date : 'dd/MM/yyyy'}} </div>
+                <div class="timestamp">{{ message.date | date : 'dd/MM/yyyy HH:mm'}} </div>
 
               </div>
               <div class="message">{{ message.text }}</div>
             </div>
+          </div>
           </div>
         </div>
       </div>

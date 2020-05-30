@@ -13,7 +13,6 @@ export class NotificationItemComponent implements OnInit {
 
   @Input() notification:Notification;
   ngOnInit() {
-    console.log(this.notification);
   }
 
 }

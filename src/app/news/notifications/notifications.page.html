@@ -26,7 +26,9 @@
            #slidingNotification>
             <app-notification-item [notification]="notification"></app-notification-item>
             <ion-item-options>
-              <ion-item-option color="primary" (click)="onDeleteNotification(notification.id,slidingNotification)">
+              <ion-item-option color="primary" (click)="onDeleteNotification(notification.id,notification.title,
+              notification.text,notification.seen,notification.date,notification.announcementId,
+              slidingNotification)">
                 <ion-icon name="trash" slot="top"></ion-icon>
                 Delete
               </ion-item-option>

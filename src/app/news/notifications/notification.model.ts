@@ -4,5 +4,7 @@ export class Notification{
         public announcementId:string,
         public title:any,
         public text:any,
+        public seen:boolean,
+        public date:Date
     ){};
 }

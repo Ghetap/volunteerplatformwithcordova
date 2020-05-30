@@ -1,19 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FcmService } from '../shared/fcm.service';
 import { ToastController } from '@ionic/angular';
 import { NewsService } from './news.service';
 import { Notification } from './notifications/notification.model';
-import { Observable } from 'rxjs';
+import { Observable, Subscription, of, BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-news',
   templateUrl: './news.page.html',
   styleUrls: ['./news.page.scss'],
 })
-export class NewsPage implements OnInit {
+export class NewsPage implements OnInit,OnDestroy {
 
-  numberNewNotifications:number=0;
-  public notifications:Notification[];
+  numberNewNotifications:Observable<number>;
+  numberOfNotifSubcription:Subscription;
+  getNotificationsSubcription:Subscription;
+  contor:number=0;
   constructor(
     public fcmService:FcmService,
     public newsService:NewsService,
@@ -22,19 +24,29 @@ export class NewsPage implements OnInit {
     }
 
   ionViewDidLoad(){}
+
   ngOnInit() {
-    this.newsService.notifications.subscribe(notificationsList=>{
-      this.notifications = notificationsList;
+    this.numberOfNotifSubcription = this.newsService.numberOfNotifications.subscribe(nr=>{
+      this.contor = nr;
+      this.numberNewNotifications = of(nr);
     })
   }
+  ngOnDestroy(){
+    if(this.numberOfNotifSubcription)
+      this.numberOfNotifSubcription.unsubscribe();
+    if(this.getNotificationsSubcription)
+      this.getNotificationsSubcription.unsubscribe();
+  }
   ionViewWillEnter(){
+    this.newsService.nrOfNotification().subscribe();
   }
   private notificationSetup(){
     this.fcmService.getToken();
     this.fcmService.listenToNotifications().subscribe(
       (msg)=>{
         this.makeToast(msg.body);
-        this.numberNewNotifications++;
+        this.contor++;
+        this.numberNewNotifications = of(this.contor);
       }
     )
     this.fcmService.receiveMessage().subscribe(
@@ -42,7 +54,8 @@ export class NewsPage implements OnInit {
         messaging.onMessageCallback = (payload: any) => {
           //let idAnnouncement = (payload.notification.title.split(" ").splice(-1))[0];
           this.makeToast(payload.notification.body);
-          this.numberNewNotifications++;
+          this.contor++;
+          this.numberNewNotifications = of(this.contor);
         };
       });
   }
@@ -54,5 +67,8 @@ export class NewsPage implements OnInit {
       buttons:['Dismiss']
     });
     toast.present();
+  }
+  ionViewDidLeave(){
+    this.contor = 0;
   }
 }
