@@ -68,6 +68,7 @@ export const sendFcm = functions.firestore.document('chats/{chatId}').onWrite(
             date
         }
         console.log(data);
+        console.log(receiverEmail);
         await db.collection('users').where('email','==',receiverEmail).get()
         .then(snapshot=>{
             snapshot.forEach(function(doc){
