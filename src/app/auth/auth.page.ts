@@ -125,4 +125,7 @@ export class AuthPage implements OnInit, OnDestroy{
       })
       .then(alertEl => alertEl.present());
   }
+  forgotPassword(){
+    
+  }
 }
