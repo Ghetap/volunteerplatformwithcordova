@@ -14,6 +14,7 @@ import { filter, map, switchMap } from 'rxjs/operators';
 })
 export class ChatPage implements OnInit,OnDestroy{
 
+  isLoading:boolean = false;
   chatId;
   receiverEmail;
   senderEmail;
@@ -31,6 +32,7 @@ export class ChatPage implements OnInit,OnDestroy{
   } 
 
   ngOnInit() {
+    this.isLoading = true;
     this.route.paramMap.subscribe(
       paramMap=>{
         if(!paramMap.has('chatId') || !paramMap.has('emailSender') || !paramMap.has('emailReceiver')){
@@ -41,6 +43,7 @@ export class ChatPage implements OnInit,OnDestroy{
         this.receiverEmail = paramMap.get('emailReceiver');
         this.senderEmail = paramMap.get('emailSender')
         this.chat$ = this.chatService.getChat(this.chatId);
+        this.isLoading = false;
       }
     )
   }

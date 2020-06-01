@@ -15,8 +15,9 @@ export class AnnouncementPage implements OnInit, OnDestroy {
 
   listLoadedAnnouncements:Announcement[];
   copyAnnouncements:Announcement[];
-
+  favAnnouncements:Announcement[];
   private announcementSub:Subscription;
+  private favoriteAnnouncementSub:Subscription;
   isLoading = false;
   isSearchbarOpened=false;
   isFilterOpened=false;
@@ -45,6 +46,8 @@ export class AnnouncementPage implements OnInit, OnDestroy {
     if(this.announcementSub){
       this.announcementSub.unsubscribe();
     }
+    if(this.favoriteAnnouncementSub)
+      this.favoriteAnnouncementSub.unsubscribe();
   }
 
   onOpenMenu(){
@@ -82,11 +85,12 @@ export class AnnouncementPage implements OnInit, OnDestroy {
   }
   onFilterUpdate(event:CustomEvent){
     this.authService.userId.pipe(take(1)).subscribe(userId=>{
-      if(event.detail.value === 'all'){
-        this.copyAnnouncements = this.listLoadedAnnouncements;
+      if(event.detail.value === 'active'){
+        this.listLoadedAnnouncements = this.copyAnnouncements;
       }else{
-        this.copyAnnouncements = this.listLoadedAnnouncements
-        .filter(announcement=>announcement.userId !== userId);
+        this.favoriteAnnouncementSub = this.newsService.fetchFavotireAnnouncements().subscribe(list=>{
+          this.listLoadedAnnouncements = list;
+        })
       }
     })
   }

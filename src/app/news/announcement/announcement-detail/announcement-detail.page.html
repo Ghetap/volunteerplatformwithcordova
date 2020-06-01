@@ -8,6 +8,19 @@
 </ion-header>
 
 <ion-content>
+  <ion-fab vertical="top" horizontal="end" slot="fixed"  *ngIf="!favoriteClicked && announcementAuthor && announcementAuthor.email !== currentUserEmail">
+    <ion-fab-button (click)="setFavorite()" >
+      <ion-icon name="star-outline"></ion-icon>
+      <ion-icon name="star-sharp" *ngIf="favoriteClicked"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-fab vertical="top" horizontal="end" slot="fixed"  *ngIf="favoriteClicked && announcementAuthor && announcementAuthor.email !== currentUserEmail">
+    <ion-fab-button (click)="unsetFavorite()" >
+      <ion-icon name="star-sharp"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <hr>
+  <hr>
   <ion-grid *ngIf="isLoading">
     <ion-row>
       <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
@@ -19,6 +32,7 @@
  <ion-grid *ngIf="!isLoading">
    <ion-row>
      <ion-col size-sm="6" offset-sm="3" class="ion-text-center">
+       <ion-button vertical="top" horizontal="end" slot="fixed"></ion-button>
       <ion-card color="light">
         <ion-card-header>
           <ion-card-title>{{ announcement.title }}</ion-card-title>

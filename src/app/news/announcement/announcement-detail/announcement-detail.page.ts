@@ -20,6 +20,7 @@ export class AnnouncementDetailPage implements OnInit,OnDestroy {
   isLoading:boolean = false;
   announcementAuthor:UserProfile
   currentUserEmail:string;
+  favoriteClicked:boolean;
   constructor(
     private newsService:NewsService,
     private route:ActivatedRoute,
@@ -59,6 +60,15 @@ export class AnnouncementDetailPage implements OnInit,OnDestroy {
             this.chatService.getSenderEmail().subscribe(email=>{
               this.currentUserEmail=email;
             });
+            this.newsService.fetchFavotireAnnouncements().subscribe(list=>{
+              if(list){
+                const elem = list.find(item=>item.id === this.announcementId);
+                if(elem)
+                  this.favoriteClicked=true;
+                else
+                  this.favoriteClicked=false;
+              }
+            })
             this.isLoading = false;
           },error=>{
             this.alertCtrl.create({
@@ -96,5 +106,14 @@ export class AnnouncementDetailPage implements OnInit,OnDestroy {
             this.router.navigate(['/','news','tabs','chat',this.announcementId,senderEmail,receiverEmail]);
           })
       });
+  }
+  setFavorite(){
+    this.favoriteClicked=true;
+    this.newsService.saveFavorite(this.announcementId,this.favoriteClicked).subscribe();
+  }
+  unsetFavorite(){
+    console.log("unset");
+    this.newsService.unsetFavorite(this.announcementId,this.favoriteClicked).subscribe();
+    this.favoriteClicked=false;
   }
 }

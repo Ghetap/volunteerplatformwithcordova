@@ -74,7 +74,8 @@ export class AuthPage implements OnInit, OnDestroy{
                   email:email,
                   password:password,
                   imageUrl:"assets/icon/pctplaceholder.png",
-                  notifications: []
+                  notifications: [],
+                  favorites:[]
                 })
                 this.isLoading = false;
                 loadingEl.dismiss();

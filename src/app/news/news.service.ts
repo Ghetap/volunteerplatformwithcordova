@@ -17,6 +17,7 @@ export class NewsService {
   private _myannouncements = new BehaviorSubject<Announcement[]>([]);
   private _notifications = new BehaviorSubject<Notification[]>([]);
   private _numberOfNotifications = new BehaviorSubject<number>(0);
+  private _favoritesAnnouncements = new BehaviorSubject<Announcement[]>([]);
   nr=0;
   constructor(
     private authService:AuthService,
@@ -38,6 +39,10 @@ export class NewsService {
 
   get numberOfNotifications(){
     return this._numberOfNotifications.asObservable();
+  }
+
+  get favoriteAnnouncements(){
+    return this._favoritesAnnouncements.asObservable();
   }
   addAnouncement(
     title:string,
@@ -280,7 +285,9 @@ export class NewsService {
         const toUpdateAnnouncementIndex = announcements.findIndex(an=>an.id===announcementId);
         upadetNews = [...announcements];
         const oldAnnouncement = upadetNews[toUpdateAnnouncementIndex];
-        upadetNews[toUpdateAnnouncementIndex] = new Announcement(
+        if(oldAnnouncement)
+        {
+          upadetNews[toUpdateAnnouncementIndex] = new Announcement(
           oldAnnouncement.id,
           oldAnnouncement.title,
           oldAnnouncement.description,
@@ -294,7 +301,8 @@ export class NewsService {
           oldAnnouncement.category,
           number,
           oldAnnouncement.announcementPictureUrl);
-          return of(upadetNews);
+        }
+        return of(upadetNews);
     }),
     take(1),
     switchMap(()=>{
@@ -326,7 +334,6 @@ export class NewsService {
       map(resData=>{
         const notifications = [];
         const doc = resData.data();
-        console.log(doc.notifications);
         doc.notifications.map(item=>{
           notifications.push(new Notification(item.id,item.announcementId,item.title,item.text,item.seen,item.date))
         })
@@ -341,7 +348,6 @@ export class NewsService {
   markNotificationsAsSeen(notifications:Notification[]){
    notifications.map(item=>item.seen=true);
    const obj = notifications.map((obj)=> {return Object.assign({}, obj)});
-   console.log(notifications);
    return this.authService.userId.pipe(
     take(1),
     map(userId=>{
@@ -410,5 +416,92 @@ export class NewsService {
   resetNumberOfNotifications(){
     this.nr = 0;
     this._numberOfNotifications.next(0);
+  }
+  saveFavorite(announcementId:string, favorite:boolean){
+    const data = {
+      announcementId,
+      favorite,
+    }
+    return this.authService.userId.pipe(
+      take(1),
+      map(userId=>{
+        if(!userId){
+          throw new Error('User not found!')
+        }
+        return userId;
+      }),
+      map((userId)=>{
+        return this.firestore.collection('users')
+        .doc(userId).update({
+          favorites: firestore.FieldValue.arrayUnion(data)
+        })
+      })
+    )
+  }
+  unsetFavorite(announcementId:string, favorite:boolean){
+    const data = {
+      announcementId,
+      favorite,
+    }
+    return this.authService.userId.pipe(
+      take(1),
+      map(userId=>{
+        if(!userId){
+          throw new Error('User not found!')
+        }
+        return userId;
+      }),
+      map((userId)=>{
+        return this.firestore.collection('users')
+        .doc(userId).update({
+            favorites: firestore.FieldValue.arrayRemove(data)
+        })
+      }),
+      switchMap(()=>{return this._favoritesAnnouncements}),
+      take(1),
+      tap(list=>{
+        const favorites = [];
+        list.map(el=>{
+         this.announcements.subscribe(list=>{
+           const elem = list.filter(item=>item.id !== announcementId);
+           if(elem)
+            favorites.push(...elem);
+         })
+       })
+        console.log(favorites);
+        this._favoritesAnnouncements.next(favorites);
+      })
+    )
+  }
+  fetchFavotireAnnouncements(){
+    return this.authService.userId.pipe(
+      take(1),
+      map(userId=>{
+        if(!userId){
+          throw new Error('User not found!')
+        }
+        return userId;
+      }),
+      switchMap((userId)=>{
+        return this.firestore.collection('users').doc(userId).get()
+      }),
+      take(1),
+      map(doc=>{
+       const docFav = doc.data().favorites;
+       const favorites = [];
+       docFav.map(el=>{
+         this.announcements.subscribe(list=>{
+           const elem = list.filter(item=>item.id === el.announcementId);
+           if(elem)
+            favorites.push(...elem);
+         })
+       })
+       return favorites;
+      }),
+      tap(list=>{
+        console.log(list);
+        return this._favoritesAnnouncements.next(list);
+      })
+    )
   }
 }
