@@ -1,12 +1,14 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
-import { Platform } from '@ionic/angular';
+import { Platform, LoadingController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './auth/auth.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserProfile } from './profile/userProfile.model';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +24,9 @@ export class AppComponent implements OnInit,OnDestroy{
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private authService:AuthService,
+    private loadingCtrl:LoadingController,
+    private firestore:AngularFirestore,
+    private firestoreAuth:AngularFireAuth,
     private router:Router) {
     this.initializeApp();
   }
@@ -56,4 +61,10 @@ export class AppComponent implements OnInit,OnDestroy{
   onLogout() {
     this.authService.logout();
   }
+  onDeleteAccount(){
+    this.authService.deleteAccount().subscribe();
+    this.authService.deleteUser().subscribe();
+    this.onLogout();
+  }
+
 }

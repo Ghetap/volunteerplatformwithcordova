@@ -1,11 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, from } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, take, switchMap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { User } from './user.model';
 import { Storage } from '@ionic/storage';
 
+import { AngularFirestore } from '@angular/fire/firestore';
 export interface AuthResponseData {
   kind: string;
   idToken: string;
@@ -22,7 +23,7 @@ export interface AuthResponseData {
 export class AuthService implements OnDestroy {
   private _user = new BehaviorSubject<User>(null);
   private activeLogoutTimer: any;
-  constructor(private http: HttpClient,private storage:Storage) {}
+  constructor(private http: HttpClient,private storage:Storage,private firestore:AngularFirestore) {}
 
   get userIsAuthenticated() {
     return this._user.asObservable().pipe(
@@ -173,5 +174,28 @@ export class AuthService implements OnDestroy {
       email: email
     });
     this.storage.set('authData', data);
+  }
+  deleteAccount(){
+    return this.token.pipe(
+      take(1), 
+      switchMap(token=>{
+        console.log(token);
+        return this.http
+        .post(
+          `https://identitytoolkit.googleapis.com/v1/accounts:delete?key=${
+            environment.firebaseApiKey
+          }`,
+          { "idToken": token }
+        )
+      })
+    )
+  }
+  deleteUser(){
+    return this.userId.pipe(
+      take(1),
+      map(userId=>{
+        return this.firestore.collection('users').doc(userId).delete();
+      })
+    )
   }
 }
