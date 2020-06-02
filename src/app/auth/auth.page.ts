@@ -17,6 +17,7 @@ export class AuthPage implements OnInit, OnDestroy{
   isLoginAsStudent = true;
   token;
   authSubcription:Subscription;
+  resetpass:boolean=false;
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -125,7 +126,40 @@ export class AuthPage implements OnInit, OnDestroy{
       })
       .then(alertEl => alertEl.present());
   }
-  forgotPassword(){
-    
+
+  forgotPass(email:string){
+    this.resetpass=true;
+    console.log(email);
+    if(email){
+      this.resetPassword(email);
+    }else{
+      this.showAlert('Please introduce your email address first!');
+    }
+  }
+  resetPassword(email:string): void {
+    this.authService.resetPassword(email).then(
+      async () => {
+        const alert = await this.alertCtrl.create({
+          message: 'Check your email for a password reset link',
+          buttons: [
+            {
+              text: 'Ok',
+              role: 'cancel',
+              handler: () => {
+                this.router.navigateByUrl('/auth');
+              },
+            },
+          ],
+        });
+        await alert.present();
+      },
+      async error => {
+        const errorAlert = await this.alertCtrl.create({
+          message: error.message,
+          buttons: [{ text: 'Ok', role: 'cancel' }],
+        });
+        await errorAlert.present();
+      }
+    );
   }
 }

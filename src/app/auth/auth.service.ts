@@ -7,6 +7,7 @@ import { User } from './user.model';
 import { Storage } from '@ionic/storage';
 
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
 export interface AuthResponseData {
   kind: string;
   idToken: string;
@@ -23,7 +24,11 @@ export interface AuthResponseData {
 export class AuthService implements OnDestroy {
   private _user = new BehaviorSubject<User>(null);
   private activeLogoutTimer: any;
-  constructor(private http: HttpClient,private storage:Storage,private firestore:AngularFirestore) {}
+  constructor(
+    private http: HttpClient,
+    private storage:Storage,
+    private firestore:AngularFirestore,
+    private authfirestore:AngularFireAuth) {}
 
   get userIsAuthenticated() {
     return this._user.asObservable().pipe(
@@ -197,5 +202,8 @@ export class AuthService implements OnDestroy {
         return this.firestore.collection('users').doc(userId).delete();
       })
     )
+  }
+  resetPassword(email:string): Promise<void> {
+    return this.authfirestore.auth.sendPasswordResetEmail(email);
   }
 }

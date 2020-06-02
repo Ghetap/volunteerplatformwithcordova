@@ -6,7 +6,7 @@
 
 <ion-content class="ion-padding">
  
-  <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+  <form #f="ngForm" (ngSubmit)="onSubmit(f)" >
     <ion-grid>
       <ion-row>
         <ion-col size-sm="4" offset-sm="4" class="ion-text-center">
@@ -109,9 +109,9 @@
             color="medium"
             fill="clear"
             expand="block"
-            (click)="forgotPassword()"
+            (click)="forgotPass(emailCtrl.value)"
           >
-            Recover Password
+            Reset Password
         </ion-button>
         </ion-col>
       </ion-row>
