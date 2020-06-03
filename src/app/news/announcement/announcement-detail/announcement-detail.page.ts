@@ -26,7 +26,6 @@ export class AnnouncementDetailPage implements OnInit,OnDestroy {
     private route:ActivatedRoute,
     private router:Router,
     private navCtrl:NavController,
-    private loadingCtrl:LoadingController,
     private chatService:ChatService,
     private alertCtrl:AlertController) { }
 
