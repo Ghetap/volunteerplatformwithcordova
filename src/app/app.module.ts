@@ -20,6 +20,8 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { FcmService } from './shared/fcm.service';
 import { Firebase } from '@ionic-native/firebase/ngx';
+import { FirestoreSettingsToken} from '@angular/fire/firestore';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -40,7 +42,8 @@ import { Firebase } from '@ionic-native/firebase/ngx';
     SplashScreen,
     AuthGuard,
     Firebase,
-    FcmService
+    FcmService,
+    { provide: FirestoreSettingsToken, useValue: {} }
   ],
   bootstrap: [AppComponent]
 })
