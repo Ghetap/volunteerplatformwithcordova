@@ -18,6 +18,7 @@ export class AuthPage implements OnInit, OnDestroy{
   token;
   authSubcription:Subscription;
   resetpass:boolean=false;
+  username;
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -34,72 +35,73 @@ export class AuthPage implements OnInit, OnDestroy{
   }
   authenticate(
     email: string,
-    password: string,
+    password: string
     ) {
     this.isLoading = true;
     this.loadingCtrl
-      .create({ keyboardClose: true, message: 'Authenticating...' })
-      .then(loadingEl => {
-        loadingEl.present();
-        let authObs: Observable<AuthResponseData>;
-        if (this.isLogin) {
-          authObs = this.authService.login(email, password);
-          this.authSubcription = authObs.subscribe(
-            resData => {
-              this.isLoading = false;
-              loadingEl.dismiss();
-              this.router.navigateByUrl('/news/tabs/announcement');
-            },
-            errRes => {
-              loadingEl.dismiss();
-              const code = errRes.error.error.message;
-              let message = 'Could not sign you in, please try again.';
-              if (code === 'EMAIL_NOT_FOUND') {
-                message = 'The email address is already in use by another account.';
-              } else if (code === 'INVALID_PASSWORD') {
-                message = 'The password is invalid or the user does not have a password.';
-              } else if (code === 'USER_DISABLED') {
-                message = 'The user account has been disabled by an administrator.';
-              }
-              this.showAlert(message);
+    .create({ keyboardClose: true, message: 'Authenticating...' })
+    .then(loadingEl => {
+      loadingEl.present();
+      let authObs: Observable<AuthResponseData>;
+      if(this.isLogin){
+        authObs = this.authService.login(email, password);
+        this.authSubcription = authObs.subscribe(
+          resData => {
+            this.isLoading = false;
+            loadingEl.dismiss();
+            this.router.navigateByUrl('/news/tabs/announcement');
+          },
+          errRes => {
+            loadingEl.dismiss();
+            const code = errRes.error.error.message;
+            let message = 'Could not sign you in, please try again.';
+            if (code === 'EMAIL_NOT_FOUND') {
+              message = 'The email address is already in use by another account.';
+            } else if (code === 'INVALID_PASSWORD') {
+              message = 'The password is invalid or the user does not have a password.';
+            } else if (code === 'USER_DISABLED') {
+              message = 'The user account has been disabled by an administrator.';
             }
-          );
-
-        } else {
-          authObs = this.authService.signup(email, password);
-          this.authSubcription = authObs.subscribe(
-            resData => {
-                console.log("register")
-                this.firestore.doc(`users/${resData.localId}`)
-                .set({
-                  email:email,
-                  password:password,
-                  imageUrl:"assets/icon/pctplaceholder.png",
-                  notifications: [],
-                  favorites:[]
-                })
-                this.isLoading = false;
-                loadingEl.dismiss();
-                this.router.navigateByUrl('/news/tabs/announcement');
+            this.showAlert(message);
+          }
+        );
+      }else{
+        authObs = this.authService.signup(email,password);
+        authObs.subscribe((resData)=>{
+          loadingEl.dismiss();
+          this.isLoading = false;
+          this.authService.verifyEmail().subscribe(
+            (data)=>{
+              this.firestore.doc(`users/${resData.localId}`)
+              .set({
+                email:data.email,
+                imageUrl:"assets/icon/pctplaceholder.png",
+                notifications: [],
+                favorites:[]
+            })
+              this.showAlert("Check your email for a email verification link and then return to login");
             },
-            errRes => {
-              loadingEl.dismiss();
-              const code = errRes.error.error.message;
-              let message = 'Could not sign you up, please try again.';
-              if (code === 'EMAIL_EXISTS') {
-                message = 'The email address is already in use by another account.';
-              } else if (code === 'OPERATION_NOT_ALLOWED') {
-                message = 'Password sign-in is disabled for this project.';
-              } else if (code === 'TOO_MANY_ATTEMPTS_TRY_LATER') {
-                message = 'We have blocked all requests from this device due to unusual activity. Try again later..';
-              }
-              this.showAlert(message);
+            error => {
+              this.showAlert("Email not verified...");
             }
-          );
-        }
-      });
-  }
-
+          )
+        },
+        errRes => {
+          loadingEl.dismiss();
+          const code = errRes.error.error.message;
+          let message = 'Could not sign you up, please try again.';
+          if (code === 'EMAIL_EXISTS') {
+            message = 'The email address is already in use by another account.';
+          } else if (code === 'OPERATION_NOT_ALLOWED') {
+            message = 'Password sign-in is disabled for this project.';
+          } else if (code === 'TOO_MANY_ATTEMPTS_TRY_LATER') {
+            message = 'We have blocked all requests from this device due to unusual activity. Try again later..';
+          }
+          this.showAlert(message);
+        });
+      }
+    }
+  )}
   onSwitchAuthMode() {
     this.isLogin = !this.isLogin;
   }
@@ -109,18 +111,17 @@ export class AuthPage implements OnInit, OnDestroy{
     }
     const email = form.value.email;
     const password = form.value.password;
-    const cpassword = form.value.confirmpassword
-    if(password !== cpassword && !this.isLogin){
-      this.showAlert('Passwords are not equal !');
-    }else{
-      this.authenticate(email, password);
-      form.reset();
+    const cpassword = form.value.confirmpassword;
+    if(!this.isLogin && password !== cpassword){
+       this.showAlert('Passwords are not equal !');
     }
+    this.authenticate(email, password);
+    form.reset();
   }
   private showAlert(message: string) {
     this.alertCtrl
       .create({
-        header: 'Authentication failed',
+        header: 'Authentication',
         message: message,
         buttons: ['Okay']
       })

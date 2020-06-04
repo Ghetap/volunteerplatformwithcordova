@@ -24,9 +24,6 @@ export class AppComponent implements OnInit,OnDestroy{
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private authService:AuthService,
-    private loadingCtrl:LoadingController,
-    private firestore:AngularFirestore,
-    private firestoreAuth:AngularFireAuth,
     private router:Router) {
     this.initializeApp();
   }
@@ -62,7 +59,7 @@ export class AppComponent implements OnInit,OnDestroy{
     this.authService.logout();
   }
   onDeleteAccount(){
-    this.authService.deleteAccount().subscribe();
+    this.authService.deleteAccount();
     this.authService.deleteUser().subscribe();
     this.onLogout();
   }

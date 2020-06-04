@@ -4,7 +4,7 @@
   </ion-thumbnail>
   <ion-item>
   <ion-label>
-    <p>{{user?.email}}</p>
+    <p *ngIf="user.lastname || user.firstname">{{user?.firstname + ' ' + user?.lastname}}</p>
     <h1>Author</h1>
   </ion-label>
   </ion-item>

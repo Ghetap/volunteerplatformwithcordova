@@ -18,6 +18,9 @@ export interface AuthResponseData {
   registered?: boolean;
 }
 
+export interface SendEmailVerification{
+  email:string
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -103,6 +106,7 @@ export class AuthService implements OnDestroy {
    }
 
   signup(email: string, password: string) {
+    //return this.authfirestore.auth.createUserWithEmailAndPassword(email,password);
     return this.http
       .post<AuthResponseData>(
         `https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${
@@ -181,6 +185,7 @@ export class AuthService implements OnDestroy {
     this.storage.set('authData', data);
   }
   deleteAccount(){
+    console.log("delete account");
     return this.token.pipe(
       take(1), 
       switchMap(token=>{
@@ -196,6 +201,7 @@ export class AuthService implements OnDestroy {
     )
   }
   deleteUser(){
+    console.log("delete user");
     return this.userId.pipe(
       take(1),
       map(userId=>{
@@ -205,5 +211,21 @@ export class AuthService implements OnDestroy {
   }
   resetPassword(email:string): Promise<void> {
     return this.authfirestore.auth.sendPasswordResetEmail(email);
+  }
+
+  verifyEmail(){
+    return this.token.pipe(
+      take(1), 
+      switchMap(token=>{
+        console.log(token);
+        return this.http
+        .post<SendEmailVerification>(
+          `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${
+            environment.firebaseApiKey
+          }`,
+          {"requestType":"VERIFY_EMAIL","idToken":token}
+        )
+      })
+    )
   }
 }

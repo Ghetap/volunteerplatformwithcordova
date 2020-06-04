@@ -2,10 +2,8 @@ import { Injectable } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { take, map, switchMap, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { User } from '../auth/user.model';
 import { UserProfile } from './userProfile.model';
 import { of, BehaviorSubject } from 'rxjs';
-import { AngularFireStorage } from '@angular/fire/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +14,7 @@ export class ProfileService {
   private _url = new BehaviorSubject<string>(null);
   email:string;
   userId:string;
-  constructor(private authService:AuthService,private firestore:AngularFirestore,
-    private astorage:AngularFireStorage) { }
+  constructor(private authService:AuthService,private firestore:AngularFirestore) { }
 
   get userProfile(){
     return this._userProfile.asObservable();

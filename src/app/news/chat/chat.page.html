@@ -24,7 +24,6 @@
             <div [class]="message.senderEmail === this.senderEmail ? 'innerMessage messageRight' : 'innerMessage messageLeft'">
               <div class="username">{{message.senderEmail}}
                 <div class="timestamp">{{ message.date | date : 'dd/MM/yyyy HH:mm'}} </div>
-
               </div>
               <div class="message">{{ message.text }}</div>
             </div>

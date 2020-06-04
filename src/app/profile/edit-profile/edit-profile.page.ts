@@ -47,11 +47,11 @@ export class EditProfilePage implements OnInit {
           }),
           firstname: new FormControl(this.userToEdit.firstname ? this.userToEdit.firstname: '',{
             updateOn:'change',
-            validators:[Validators.required]
+            //validators:[Validators.required]
           }),
           lastname:new FormControl(this.userToEdit.lastname ? this.userToEdit.lastname: '',{
             updateOn:'change',
-           validators:[Validators.required]
+           //validators:[Validators.required]
           }),
           description: new FormControl(this.userToEdit.description ? this.userToEdit.description: '',{
             updateOn:'change',
@@ -59,11 +59,11 @@ export class EditProfilePage implements OnInit {
           }),
           profession: new FormControl(this.userToEdit.profession ? this.userToEdit.profession: '',{
             updateOn:'change',
-            validators:[Validators.required]
+            //validators:[Validators.required]
           }),
           where:new FormControl(this.userToEdit.where ? this.userToEdit.where: '',{
             updateOn:'change',
-            validators:[Validators.required]
+           // validators:[Validators.required]
           }),
         });
         this.isLoading = false;

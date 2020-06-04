@@ -4,6 +4,7 @@ import { ToastController } from '@ionic/angular';
 import { NewsService } from './news.service';
 import { Notification } from './notifications/notification.model';
 import { Observable, Subscription, of, BehaviorSubject } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-news',
@@ -16,9 +17,11 @@ export class NewsPage implements OnInit,OnDestroy {
   numberOfNotifSubcription:Subscription;
   getNotificationsSubcription:Subscription;
   contor:number=0;
+
   constructor(
     public fcmService:FcmService,
     public newsService:NewsService,
+    public authService:AuthService,
     public toastCtrl:ToastController) { 
       this.notificationSetup();
     }

@@ -408,7 +408,6 @@ export class NewsService {
         })
       }),
       tap(()=>{
-        console.log(this.nr);
         this._numberOfNotifications.next(this.nr);
       })
     )
