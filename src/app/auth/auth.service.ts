@@ -185,7 +185,6 @@ export class AuthService implements OnDestroy {
     this.storage.set('authData', data);
   }
   deleteAccount(){
-    console.log("delete account");
     return this.token.pipe(
       take(1), 
       switchMap(token=>{
@@ -201,7 +200,6 @@ export class AuthService implements OnDestroy {
     )
   }
   deleteUser(){
-    console.log("delete user");
     return this.userId.pipe(
       take(1),
       map(userId=>{

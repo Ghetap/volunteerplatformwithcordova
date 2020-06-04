@@ -59,7 +59,7 @@ export class AppComponent implements OnInit,OnDestroy{
     this.authService.logout();
   }
   onDeleteAccount(){
-    this.authService.deleteAccount();
+    this.authService.deleteAccount().subscribe();
     this.authService.deleteUser().subscribe();
     this.onLogout();
   }
