@@ -199,10 +199,25 @@ export class AuthService implements OnDestroy {
     )
   }
   deleteUser(){
+    let id;
+    let docId;
     return this.userId.pipe(
       take(1),
       map(userId=>{
+        id=userId;
         return this.firestore.collection('users').doc(userId).delete();
+      }),
+      switchMap(()=>{
+        return this.firestore.collection('announcements',ref=>ref.where('userId','==',id)).get();
+      }),
+      take(1),
+      switchMap((doc)=>{
+        doc.docs.map(item=>docId=item.id);
+        return this.firestore.collection(`announcements`).doc(docId).delete();
+      }),
+      take(1),
+      map(()=>{
+        return this.firestore.collection('chats').doc(docId).delete();
       })
     )
   }
