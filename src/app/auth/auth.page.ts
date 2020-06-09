@@ -35,7 +35,9 @@ export class AuthPage implements OnInit, OnDestroy{
   }
   authenticate(
     email: string,
-    password: string
+    password: string,
+    firstname:string,
+    lastname:string
     ) {
     this.isLoading = true;
     this.loadingCtrl
@@ -77,7 +79,9 @@ export class AuthPage implements OnInit, OnDestroy{
                 email:data.email,
                 imageUrl:"assets/icon/pctplaceholder.png",
                 notifications: [],
-                favorites:[]
+                favorites:[],
+                firstname:firstname,
+                lastname:lastname
             })
               this.showAlert("Check your email for a email verification link and then return to login");
             },
@@ -112,10 +116,12 @@ export class AuthPage implements OnInit, OnDestroy{
     const email = form.value.email;
     const password = form.value.password;
     const cpassword = form.value.confirmpassword;
+    const firstname = form.value.firstname;
+    const lastname = form.value.lastname
     if(!this.isLogin && password !== cpassword){
        this.showAlert('Passwords are not equal !');
     }
-    this.authenticate(email, password);
+    this.authenticate(email, password,firstname,lastname);
     form.reset();
   }
   private showAlert(message: string) {

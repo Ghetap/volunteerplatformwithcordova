@@ -2,8 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FcmService } from '../shared/fcm.service';
 import { ToastController } from '@ionic/angular';
 import { NewsService } from './news.service';
-import { Notification } from './notifications/notification.model';
-import { Observable, Subscription, of, BehaviorSubject } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 
 @Component({

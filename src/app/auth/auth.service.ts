@@ -106,7 +106,6 @@ export class AuthService implements OnDestroy {
    }
 
   signup(email: string, password: string) {
-    //return this.authfirestore.auth.createUserWithEmailAndPassword(email,password);
     return this.http
       .post<AuthResponseData>(
         `https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${

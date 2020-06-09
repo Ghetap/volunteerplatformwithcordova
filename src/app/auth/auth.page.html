@@ -19,6 +19,24 @@
         <ion-col  size-sm="4" offset-sm="4">
           <ion-card>
           <ion-list>
+            <ion-item *ngIf="!isLogin">
+              <ion-label position="floating">Firstname</ion-label>
+              <ion-input
+                type="text"
+                ngModel
+                name="firstname"
+                required
+              ></ion-input>
+            </ion-item>
+            <ion-item *ngIf="!isLogin">
+              <ion-label position="floating">Lastname</ion-label>
+              <ion-input
+                type="text"
+                ngModel
+                name="lastname"
+                required
+              ></ion-input>
+            </ion-item>
             <ion-item>
               <ion-label position="floating">E-Mail</ion-label>
               <ion-input
